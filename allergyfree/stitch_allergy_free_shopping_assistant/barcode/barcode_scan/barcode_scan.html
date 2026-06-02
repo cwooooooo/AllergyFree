@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scanning-line {
+            height: 2px;
+            width: 100%;
+            background: #2ecc71;
+            box-shadow: 0 0 15px 2px #2ecc71;
+            position: absolute;
+            top: 0;
+            left: 0;
+            /* Animation suppressed per instructions, but visual marker remains at top */
+        }
+        .viewfinder-corner {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            border-color: #2ecc71;
+            border-width: 4px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface-variant": "#3d4a3e",
+                      "on-secondary": "#ffffff",
+                      "surface-tint": "#006d37",
+                      "primary-container": "#2ecc71",
+                      "on-primary-fixed": "#00210c",
+                      "tertiary-fixed": "#ffdbd0",
+                      "tertiary-fixed-dim": "#ffb59d",
+                      "surface-container-highest": "#dce5da",
+                      "secondary": "#006b58",
+                      "secondary-fixed": "#6ff9d6",
+                      "surface": "#f3fcf1",
+                      "on-primary-fixed-variant": "#005228",
+                      "surface-container-high": "#e2ebe0",
+                      "secondary-container": "#6cf7d4",
+                      "surface-container": "#e8f0e5",
+                      "on-secondary-fixed": "#002019",
+                      "surface-variant": "#dce5da",
+                      "on-tertiary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "inverse-primary": "#4ae183",
+                      "surface-bright": "#f3fcf1",
+                      "tertiary-container": "#ff9875",
+                      "inverse-on-surface": "#ebf3e8",
+                      "inverse-surface": "#2b322b",
+                      "on-error-container": "#93000a",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed-dim": "#4eddbb",
+                      "primary": "#006d37",
+                      "on-primary-container": "#005027",
+                      "primary-fixed": "#6bfe9c",
+                      "primary-fixed-dim": "#4ae183",
+                      "surface-container-low": "#eef6eb",
+                      "outline-variant": "#bbcbbb",
+                      "on-secondary-container": "#00705c",
+                      "on-tertiary-fixed": "#390c00",
+                      "on-background": "#161d17",
+                      "outline": "#6c7b6d",
+                      "on-secondary-fixed-variant": "#005141",
+                      "surface-dim": "#d4dcd2",
+                      "on-surface": "#161d17",
+                      "error": "#ba1a1a",
+                      "surface-container-lowest": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "background": "#f3fcf1",
+                      "tertiary": "#98472a",
+                      "on-tertiary-fixed-variant": "#793015",
+                      "on-tertiary-container": "#772e14"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "lg": "24px",
+                      "gutter": "16px",
+                      "xl": "40px",
+                      "md": "16px",
+                      "base": "4px",
+                      "xs": "4px",
+                      "margin-mobile": "20px",
+                      "container-max": "1200px",
+                      "sm": "8px"
+              },
+              "fontFamily": {
+                      "label-sm": ["Inter"],
+                      "label-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "body-lg": ["Inter"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                      "label-lg": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "headline-lg": ["28px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                      "display-lg": ["36px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "headline-md": ["22px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile py-sm max-w-container-max mx-auto bg-surface dark:bg-surface-dim shadow-sm">
+<div class="flex items-center gap-md">
+<button class="cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary">Barcode Scan</h1>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined cursor-pointer active:scale-95 transition-transform text-on-surface">notifications</span>
+<span class="material-symbols-outlined cursor-pointer active:scale-95 transition-transform text-on-surface">account_circle</span>
+</div>
+</header>
+<!-- Main Content Area (Scanning Canvas) -->
+<main class="flex-grow pt-xl pb-32 flex flex-col">
+<!-- Viewfinder Section -->
+<div class="relative flex-grow flex flex-col items-center justify-center bg-black overflow-hidden mt-md">
+<!-- Simulated Camera Feed -->
+<div class="absolute inset-0 opacity-60">
+<img class="w-full h-full object-cover" data-alt="A detailed point-of-view shot of a grocery store shelf filled with colorful cereal boxes, captured with shallow depth of field. The lighting is bright and clinical, typical of a modern supermarket environment. The overall aesthetic is clean and high-definition, emphasizing food safety and commercial organization. The color palette features pops of primary colors against white and steel shelf backgrounds." src="https://lh3.googleusercontent.com/aida-public/AB6AXuClxA3RUFKketqfBnWTNa7YCIW4oo8WlXclaFHe7NB5Q_3KWH-0sG8RruMwi22fiIGoXy-Flbdxo3MOETRG2c-xaCo0TJJqmuanxrtdPKB1sDcZqjFqSFPjosc7rNim7iDqU80JP0zBb55NgGyLj-_KmHuWIZZk1jLpUTtXdI5vRMDgsyI3Ztm7Y6VF0MEu_M1fZHHzcTohgwqK75XL-z8Tanh4QaXuIhs7nqu9t-EK_tFgNFvrFbc30PTccZkfv2ZvLhULEer2t0A"/>
+</div>
+<!-- Dark Overlays for Viewfinder Focus -->
+<div class="absolute inset-0 flex flex-col">
+<div class="flex-grow bg-black/50"></div>
+<div class="flex h-[240px]">
+<div class="w-margin-mobile bg-black/50"></div>
+<div class="flex-grow relative border-none">
+<!-- Corners -->
+<div class="viewfinder-corner top-0 left-0 border-t border-l rounded-tl-xl"></div>
+<div class="viewfinder-corner top-0 right-0 border-t border-r rounded-tr-xl"></div>
+<div class="viewfinder-corner bottom-0 left-0 border-b border-l rounded-bl-xl"></div>
+<div class="viewfinder-corner bottom-0 right-0 border-b border-r rounded-br-xl"></div>
+<!-- Scanning Bar -->
+<div class="scanning-line"></div>
+</div>
+<div class="w-margin-mobile bg-black/50"></div>
+</div>
+<div class="flex-grow bg-black/50 flex flex-col items-center pt-lg">
+<p class="text-white font-label-lg px-xl text-center">제품의 바코드를 사각형 안에 맞춰주세요</p>
+<!-- Controls -->
+<div class="flex gap-xl mt-xl">
+<button class="flex flex-col items-center gap-sm active:scale-95 transition-transform">
+<div class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
+<span class="material-symbols-outlined">flashlight_on</span>
+</div>
+<span class="text-white text-label-sm">Flash</span>
+</button>
+<button class="flex flex-col items-center gap-sm active:scale-95 transition-transform">
+<div class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
+<span class="material-symbols-outlined">keyboard</span>
+</div>
+<span class="text-white text-label-sm">Manual</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Scans Tray -->
+<section class="bg-surface-container-low px-margin-mobile py-lg">
+<div class="flex justify-between items-center mb-md">
+<h3 class="font-headline-md text-headline-md text-on-surface">Recent Scans</h3>
+<button class="text-primary font-label-lg">See All</button>
+</div>
+<div class="flex gap-md overflow-x-auto pb-sm scrollbar-hide">
+<!-- Scan Card 1 -->
+<div class="min-w-[140px] bg-surface rounded-xl p-sm shadow-sm border border-outline-variant flex flex-col gap-xs">
+<div class="h-20 w-full bg-surface-container rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="A clean product shot of a high-quality organic milk carton sitting on a kitchen counter. The lighting is soft and natural, emphasizing purity and freshness. The background is a minimalist white marble texture. The overall mood is healthy and reassuring, using a palette of whites and soft blues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFSZcWW4IzqSUEmWuLvYmWjieBSn9LfqXF7fxrmgeh3fKZRtD7tGV38P48rzcSjqfDZ5Iw9hLZqP7-C_ud08FJRtkGRXhcAxZw0Ben0-JFLkOcak3a1vyz7JfG8vuZX9rPCqmqyVpReAW-gMQT5x2rMp-S-ntqY3qDlMfeJj6dTlLxVPjBk3zEsAIk_GClPNagHEtBvtZhvEXxLDGEo6a1O4WiUCoPuraOLAuWAjWiiBx_s-cjyrM7_TGdDpe60j7Gf5iEAE-54rI"/>
+<div class="absolute top-1 right-1 bg-primary-container text-on-primary-container rounded-full p-0.5">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<span class="text-label-sm font-bold text-on-surface truncate">Organic Whole Milk</span>
+<span class="text-[10px] text-on-surface-variant">2 mins ago</span>
+</div>
+<!-- Scan Card 2 -->
+<div class="min-w-[140px] bg-surface rounded-xl p-sm shadow-sm border border-outline-variant flex flex-col gap-xs">
+<div class="h-20 w-full bg-surface-container rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Close up studio photography of a gourmet sourdough bread loaf with a crispy golden crust. The scene is illuminated by warm, directional lighting that highlights the texture of the bread. The aesthetic is rustic yet professional, suggesting high-quality ingredients and safe preparation. Palette includes warm ambers and wheat tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCI_z_Ol-vUTfZ1jwOfj0iVuc5vAAuoDRggTSQeFk9Ylcl_o7XbdSJH-G1aDYClV4AgVN1T_8gROMOP_nBYNSbFh8sOIRovX4lyszRWfrTU6n1Ol7XpnwnwTimgyC-VjVL_0v0ig8z6bznIXfulohyEYiiQmdmNOCz41CCivs5RGpxl15N2d9yODX1swPYxOKzsrveh8TGa1GDdrviwhr36T6hu6FXmKbFHzszi0QJRHBfmVTbq06oZxJDdaw0yitcfznawhivXzZU"/>
+<div class="absolute top-1 right-1 bg-primary-container text-on-primary-container rounded-full p-0.5">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<span class="text-label-sm font-bold text-on-surface truncate">Artisan Sourdough</span>
+<span class="text-[10px] text-on-surface-variant">1 hour ago</span>
+</div>
+<!-- Scan Card 3 -->
+<div class="min-w-[140px] bg-surface rounded-xl p-sm shadow-sm border border-outline-variant flex flex-col gap-xs">
+<div class="h-20 w-full bg-surface-container rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="A vibrant macro photograph of fresh, dark chocolate pieces with sea salt granules. The lighting is dramatic, casting soft shadows that create depth. The style is premium and artisanal, emphasizing clean food production. The color palette is rich brown and ivory, conveying luxury and safety for allergen-free treats." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsCSHADgtGpiSgpMJTk7fA1XjoOY-znYSfKw1OCT_6-HvA3FykbclRhmKuCBDj9IS2CJaU-ZAJTw2J6Z-E5Q6z2_amqko6CTsiQp4pS-fo4sqPckixoBY09HYwoDQS9296ii9cBvoL0MD1n02DHUHRK1gpTg-Fn2MpNHFm1gG3jFYXFCbXfamivgRvOGfwCTqc7SkCP2PgVGuuez_scH8cFr7f8Lhs_Kxw657nl2OHNFsgm_maLX3uSZv3ZChU5y3ymOdyG_NNlCc"/>
+<div class="absolute top-1 right-1 bg-primary-container text-on-primary-container rounded-full p-0.5">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<span class="text-label-sm font-bold text-on-surface truncate">70% Dark Chocolate</span>
+<span class="text-[10px] text-on-surface-variant">3 hours ago</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container-lowest dark:bg-inverse-surface shadow-[0_-4px_12px_rgba(0,0,0,0.04)] rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed cursor-pointer active:scale-90 transition-all duration-150">
+<span class="material-symbols-outlined">shopping_basket</span>
+<span class="font-label-sm text-label-sm">Shop</span>
+</div>
+<!-- Active Tab: Scan -->
+<div class="flex flex-col items-center justify-center bg-secondary-container dark:bg-on-secondary-fixed-variant text-on-secondary-container dark:text-secondary-fixed rounded-full px-5 py-1 active:scale-90 transition-all duration-150">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">barcode_scanner</span>
+<span class="font-label-sm text-label-sm">Scan</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed cursor-pointer active:scale-90 transition-all duration-150">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-sm text-label-sm">My Pantry</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed cursor-pointer active:scale-90 transition-all duration-150">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</nav>
+</body></html>

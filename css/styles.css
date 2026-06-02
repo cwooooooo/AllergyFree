@@ -1,0 +1,58 @@
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+}
+
+.safe-glow {
+    box-shadow: 0 0 20px rgba(74, 225, 131, 0.15);
+}
+
+.scanner-line {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #2ecc71, transparent);
+    box-shadow: 0 0 15px #2ecc71;
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    animation: scan 3s ease-in-out infinite;
+}
+
+@keyframes scan {
+    0%, 100% { transform: translateY(-80px); }
+    50% { transform: translateY(80px); }
+}
+
+/* Shimmer animation for skeleton loader */
+.shimmer {
+    background: linear-gradient(
+        90deg,
+        rgba(226, 232, 240, 0.6) 25%,
+        rgba(203, 213, 225, 0.9) 37%,
+        rgba(226, 232, 240, 0.6) 63%
+    );
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+/* Smooth fade-in and slide-up transition for items */
+.fade-in-slide {
+    animation: fadeInSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: translateY(15px);
+}
+
+@keyframes fadeInSlide {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

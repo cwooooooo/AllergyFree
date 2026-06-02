@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Scan Results - AllergyFree</title>
+<link rel="icon" type="image/png" href="/image/icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+<script src="../js/tailwind.config.js"></script>
+<link rel="stylesheet" href="../css/styles.css">
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script src="../js/auth.js" defer></script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-24">
+<!-- Top Navigation -->
+<header class="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-outline-variant/10 shadow-sm">
+<div class="max-w-md mx-auto w-full flex justify-between items-center px-4 py-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#0f683d] cursor-pointer active:scale-95 transition-transform font-bold text-[24px]" data-icon="arrow_back">arrow_back</span>
+<span class="text-xl font-bold text-[#0f683d] select-none">AllergyFree</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="cursor-pointer active:scale-95 transition-transform text-[#0f683d] flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+</button>
+<button id="header-profile-btn" class="cursor-pointer active:scale-95 transition-transform text-[#0f683d] flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<main class="mt-16 px-4 max-w-md mx-auto space-y-md pb-24">
+  <!-- Scanner & Input Section -->
+  <section id="scan-input-card" class="bg-surface-container-lowest p-lg rounded-2xl border border-outline-variant/30 shadow-sm space-y-lg max-w-md mx-auto">
+    <h3 class="font-headline-md text-headline-md text-primary font-bold flex items-center gap-xs pb-xs border-b border-outline-variant/30">
+      <span class="material-symbols-outlined">barcode_scanner</span>
+      상품 바코드 스캔 / 입력
+    </h3>
+
+    <!-- Live Camera Scanner -->
+    <div id="camera-scan-container" class="space-y-md">
+      <h4 class="text-label-lg font-bold text-on-surface-variant flex items-center gap-xs">
+        <span class="material-symbols-outlined text-[18px]">photo_camera</span>
+        실시간 카메라 바코드 스캔
+      </h4>
+      <div id="reader" class="w-full aspect-square max-w-sm mx-auto bg-surface-container-high rounded-xl overflow-hidden relative border border-outline-variant flex items-center justify-center">
+        <div id="reader-placeholder" class="text-center p-md space-y-sm">
+          <span class="material-symbols-outlined text-[48px] text-primary">videocam</span>
+          <p class="text-body-sm text-on-surface-variant">카메라 권한을 허용하고 스캔을 시작하세요.</p>
+          <button id="start-camera-btn" type="button" class="bg-primary hover:bg-surface-tint text-on-primary px-lg py-sm rounded-full font-label-md active:scale-95 transition-all shadow-sm">
+            카메라 켜기
+          </button>
+        </div>
+      </div>
+      <button id="stop-camera-btn" type="button" class="hidden w-full bg-error hover:bg-error/95 text-on-error px-md py-sm rounded-lg font-label-md active:scale-95 transition-all text-center">
+        카메라 끄기
+      </button>
+    </div>
+
+    <!-- Manual Barcode Input -->
+    <div id="manual-scan-container" class="space-y-sm border-t border-outline-variant/30 pt-md">
+      <h4 class="text-label-lg font-bold text-on-surface-variant flex items-center gap-xs">
+        <span class="material-symbols-outlined text-[18px]">keyboard</span>
+        바코드 번호 직접 입력
+      </h4>
+      <div class="flex gap-sm">
+        <input type="text" id="manual-barcode-input" placeholder="예: 8809999999001" 
+          class="flex-1 bg-surface-container-low border border-outline rounded-lg px-md py-sm text-body-md focus:ring-2 focus:ring-primary focus:outline-none transition-all"/>
+        <button id="manual-submit-btn" type="button" class="bg-primary hover:bg-surface-tint text-on-primary px-lg py-sm rounded-lg font-label-lg active:scale-95 transition-all shadow-sm">
+          조회
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scan Visualization / Product Card Section -->
+  <section id="scan-container-box" class="bg-white rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-outline-variant/30 overflow-hidden flex flex-col transition-all duration-300">
+    <!-- Image container -->
+    <div class="relative bg-white aspect-[4/3] flex items-center justify-center p-6 border-b border-outline-variant/10">
+      <img id="scan-product-img" loading="lazy" alt="Product Image" class="max-h-full max-w-full object-contain transition-all duration-300 hover:scale-105" src=""/>
+      
+      <!-- Floating Badge -->
+      <div id="scan-safety-badge-floating" class="absolute top-4 right-4 bg-[#24d27a] text-white px-3.5 py-1.5 rounded-full text-label-md font-bold shadow-sm flex items-center gap-xs transition-all duration-300 select-none">
+        <span class="material-symbols-outlined text-[16px] font-bold">check_circle</span>
+        <span>SAFE</span>
+      </div>
+    </div>
+
+    <!-- Product Text Details inside Card -->
+    <div class="p-lg space-y-xs text-left">
+      <h1 id="scan-product-name" class="font-headline-md text-headline-md text-on-surface font-bold text-xl">상품명</h1>
+      <div class="flex items-center gap-xs flex-wrap">
+        <span id="scan-product-brand" class="text-label-sm font-bold text-outline uppercase tracking-wider">BRAND</span>
+        <span id="scan-external-badge" class="hidden bg-secondary-container text-on-secondary-container px-sm py-xs rounded text-[10px] font-bold">공공데이터</span>
+        <span id="scan-barcode-text" class="text-[10px] bg-surface-container text-outline px-sm py-xs rounded font-mono">Barcode</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Safety Status Indicator (Alert Banner) -->
+  <section id="scan-status-section" class="bg-[#e8f7ee] border border-[#c2ebd1] p-lg rounded-2xl flex flex-col items-center justify-center text-center gap-sm transition-all duration-300">
+    <div id="scan-safety-badge" class="w-14 h-14 rounded-full bg-[#24d27a] flex items-center justify-center text-white shadow-sm transition-all duration-300">
+      <span id="scan-safety-icon" class="material-symbols-outlined text-[32px] font-bold">shield</span>
+    </div>
+    <div class="space-y-xs max-w-[280px]">
+      <h2 id="scan-safety-title" class="font-headline-md text-[#0f683d] font-bold text-lg">안전한 식품입니다</h2>
+      <p id="scan-safety-desc" class="font-body-sm text-[#1e5e3a] leading-relaxed">
+        귀하의 프로필과 일치하는 알레르기 유발성분이 검출되지 않았습니다. 안심하고 섭취하셔도 좋습니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- Bento Grid Analysis & Additional Info container -->
+  <div id="scan-details-container" class="space-y-md">
+    <!-- Ingredient Match Analysis Card -->
+    <div class="bg-white p-lg rounded-2xl border border-outline-variant/30 shadow-sm space-y-md">
+      <h3 class="font-headline-md text-on-surface font-bold text-base flex items-center gap-sm">
+        <span class="material-symbols-outlined text-[#0f683d]">analytics</span>
+        내 프로필 맞춤 분석
+      </h3>
+      <div id="scan-analysis-grid" class="grid grid-cols-2 gap-sm">
+        <!-- Safe Match (Dynamic) -->
+        <div class="bg-[#f1faf5] border border-[#d3eedf] p-md rounded-xl flex items-center gap-sm relative">
+          <div class="w-10 h-10 rounded-full bg-[#d3eedf] flex items-center justify-center text-[#0f683d]">
+            <span class="material-symbols-outlined text-[22px]">water_drop</span>
+          </div>
+          <div class="flex flex-col text-left">
+            <span class="text-[10px] text-outline">Milk Free</span>
+            <span class="font-label-lg font-bold text-[#0f683d]">유제품 없음</span>
+          </div>
+          <span class="material-symbols-outlined text-[18px] text-[#24d27a] absolute top-2 right-2">check_circle</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons Container (Mockup layout) -->
+    <div class="flex flex-col gap-sm pt-xs">
+      <button id="add-to-pantry-btn" class="w-full bg-[#0f683d] hover:bg-[#125c34] text-white py-4 rounded-xl font-label-lg flex items-center justify-center gap-sm active:scale-[0.98] transition-all shadow-sm">
+        <span class="material-symbols-outlined">inventory_2</span>
+        My Pantry에 추가하기
+      </button>
+      <button id="share-result-btn" class="w-full border border-[#0f683d] text-[#0f683d] hover:bg-[#f1faf5] py-4 rounded-xl font-label-lg flex items-center justify-center gap-sm active:scale-[0.98] transition-all bg-white">
+        <span class="material-symbols-outlined">share</span>
+        결과 공유하기
+      </button>
+      <a href="/scan" class="w-full border border-outline text-on-surface-variant hover:bg-surface-container py-3 rounded-xl font-label-md flex items-center justify-center gap-sm active:scale-[0.98] transition-all bg-white mt-1">
+        <span class="material-symbols-outlined text-[18px]">barcode_scanner</span>
+        다른 상품 스캔
+      </a>
+    </div>
+
+    <!-- Full Ingredient List -->
+    <div class="bg-white p-lg rounded-2xl border border-outline-variant/30 shadow-sm space-y-md">
+      <div class="flex justify-between items-center pb-xs border-b border-outline-variant/10">
+        <h3 class="font-headline-md text-on-surface font-bold text-base">전체 성분 분석</h3>
+        <button class="text-primary font-label-sm flex items-center gap-xs hover:underline">
+          <span class="material-symbols-outlined text-[16px]">report</span> Report Error
+        </button>
+      </div>
+      <div id="scan-ingredients-list" class="flex flex-wrap gap-xs leading-relaxed">
+        <!-- Ingredients Pills populated dynamically -->
+      </div>
+      <div class="mt-md p-md bg-[#f4fbf4] rounded-xl border-l-4 border-[#0f683d]">
+        <p id="scan-ingredients-note" class="font-body-sm text-[#1e5e3a] leading-relaxed italic text-xs">
+          * 원재료 정보는 제조사의 사정에 따라 예고 없이 변경될 수 있습니다.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alternative Suggestions -->
+  <section id="scan-alternatives-section" class="space-y-md">
+    <h3 class="font-headline-md text-on-surface font-bold text-base px-sm">안전한 대체 상품 추천</h3>
+    <div id="scan-alternatives-container" class="flex overflow-x-auto gap-md pb-md no-scrollbar">
+      <!-- Alternative Card 1 -->
+      <div class="min-w-[200px] bg-white p-md rounded-xl border border-outline-variant/30 shadow-sm group cursor-pointer hover:border-primary transition-colors">
+        <div class="relative rounded-lg overflow-hidden h-32 bg-surface mb-sm">
+          <img loading="lazy" alt="Creamy Squash Soup" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" src=""/>
+          <div class="absolute top-2 right-2 bg-primary-container p-1 rounded-full">
+            <span class="material-symbols-outlined text-[16px] text-on-primary-container" data-weight="fill">check</span>
+          </div>
+        </div>
+        <h4 class="font-label-lg text-on-surface">Golden Squash Bisque</h4>
+        <p class="font-body-sm text-on-surface-variant">$4.20 • 4.8★</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-[0_-8px_30px_rgba(0,0,0,0.05)] border-t border-outline-variant/10 rounded-t-2xl py-2 flex justify-around items-center max-w-md mx-auto left-0 right-0">
+  <div class="flex flex-col items-center justify-center text-[#1b5e20]/60 hover:text-[#0f683d] cursor-pointer active:scale-90 transition-all duration-150 w-16">
+    <span class="material-symbols-outlined text-[24px]">shopping_basket</span>
+    <span class="text-[10px] font-semibold mt-0.5">Shop</span>
+  </div>
+  <div class="flex flex-col items-center justify-center bg-[#5bfadc] text-[#0f683d] rounded-full px-5 py-1.5 cursor-pointer active:scale-95 transition-all duration-150 font-bold shadow-sm">
+    <span class="material-symbols-outlined text-[22px]" data-weight="fill">barcode_scanner</span>
+    <span class="text-[10px] font-bold mt-0.5">Scan</span>
+  </div>
+  <div class="flex flex-col items-center justify-center text-[#1b5e20]/60 hover:text-[#0f683d] cursor-pointer active:scale-90 transition-all duration-150 w-16">
+    <span class="material-symbols-outlined text-[24px]">inventory_2</span>
+    <span class="text-[10px] font-semibold mt-0.5">My Pantry</span>
+  </div>
+  <div class="flex flex-col items-center justify-center text-[#1b5e20]/60 hover:text-[#0f683d] cursor-pointer active:scale-90 transition-all duration-150 w-16">
+    <span class="material-symbols-outlined text-[24px]">person</span>
+    <span class="text-[10px] font-semibold mt-0.5">Profile</span>
+  </div>
+</nav>
+<!-- Footer for context (usually hidden on main app screens but included for brand integrity) -->
+<footer class="w-full py-xl px-margin-mobile flex flex-col items-center gap-md bg-surface-container-low border-t border-outline-variant mt-xl">
+<span class="text-headline-md font-headline-md font-bold text-on-surface">AllergyFree</span>
+<div class="flex flex-wrap justify-center gap-md">
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Ingredient Sources</a>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-center">© 2024 AllergyFree. Your safety is our priority.</p>
+</footer>
+</body></html>

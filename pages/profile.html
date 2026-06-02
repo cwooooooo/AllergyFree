@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<title>AllergyFree - 프로필 설정</title>
+<link rel="icon" type="image/png" href="/image/icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+<script src="../js/tailwind.config.js"></script>
+<link rel="stylesheet" href="../css/styles.css">
+<script src="../js/auth.js" defer></script>
+</head>
+<body class="bg-background text-on-surface font-body-md">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface dark:bg-surface-dim shadow-sm">
+<div class="max-w-container-max mx-auto w-full flex justify-between items-center px-margin-mobile py-sm">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary cursor-pointer active:scale-95 transition-transform" data-icon="arrow_back">arrow_back</span>
+<span class="text-headline-lg font-headline-lg font-bold text-primary dark:text-inverse-primary">AllergyFree</span>
+</div>
+<div class="hidden md:flex flex-1 max-w-2xl mx-lg relative">
+<input class="w-full bg-surface-container-low border-none rounded-full px-lg py-sm text-body-md focus:ring-2 focus:ring-primary-container" placeholder="상품명 또는 바코드 검색" type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-2 text-outline cursor-pointer" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-md">
+<a href="/shop" class="text-primary font-bold hover:underline px-xs text-body-md flex items-center gap-xs">
+<span class="material-symbols-outlined">shopping_basket</span>
+<span class="hidden sm:inline">쇼핑몰</span>
+</a>
+<a href="/cart" class="relative cursor-pointer active:scale-95 transition-transform text-primary flex items-center justify-center p-1 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span id="cart-badge" class="absolute -top-1 -right-1 bg-error text-on-error text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full hidden">0</span>
+</a>
+<button class="cursor-pointer active:scale-95 transition-transform text-primary">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button id="header-profile-btn" class="cursor-pointer active:scale-95 transition-transform text-primary">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-[80px] pb-[120px] px-margin-mobile max-w-[600px] mx-auto">
+<!-- Header Section -->
+<section class="mb-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">알레르기 프로필 설정</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">사용자의 안전을 위해 제외할 성분을 선택해주세요.</p>
+</section>
+<!-- Safety Info Card -->
+<section class="bg-secondary-container/20 rounded-xl p-md border border-secondary-container mb-lg flex gap-md items-start">
+<span class="material-symbols-outlined text-secondary" data-icon="info">info</span>
+<div>
+<h3 class="font-label-lg text-label-lg text-on-secondary-container mb-xs">프로필 필터링 안내</h3>
+<p class="font-body-sm text-body-sm text-on-secondary-container opacity-90">
+                    설정된 알레르기 성분은 상품 바코드 스캔 시 즉시 분석됩니다. 해당 성분이 포함된 제품은 <span class="font-bold">빨간색 경고</span>로 표시되어 위험을 사전에 방지합니다.
+                </p>
+</div>
+</section>
+<!-- User Profile Summary -->
+<section class="bg-surface-container-lowest rounded-xl p-md shadow-sm mb-lg border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div id="profile-avatar" class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-headline-md">
+                    김
+                </div>
+<div>
+<p id="profile-name" class="font-label-lg text-label-lg text-on-surface">김안전 님</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">기본 프로필 사용 중</p>
+</div>
+</div>
+<button id="edit-profile-btn" class="font-label-lg text-label-lg text-primary hover:underline transition-all">정보 수정</button>
+</section>
+<!-- Allergy Selection Grid -->
+<section class="mb-xl">
+<div class="flex justify-between items-end mb-md">
+<h3 class="font-headline-md text-headline-md text-on-surface">주요 알레르기 성분</h3>
+<span class="font-body-sm text-body-sm text-outline">중복 선택 가능</span>
+</div>
+<div id="major-allergens-grid" class="grid grid-cols-2 gap-md">
+</div>
+</section>
+<!-- Custom Allergen Section -->
+<section class="mb-xl">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-md">기타 알레르기 직접 추가</h3>
+<div class="relative mb-md">
+<input id="custom-allergen-input" class="w-full h-14 pl-md pr-[100px] bg-surface-container-lowest border-outline-variant rounded-xl focus:ring-primary focus:border-primary font-body-md text-body-md" placeholder="예: 복숭아, 메밀, 대두 등" type="text"/>
+<button id="add-custom-allergen-btn" class="absolute right-sm top-1/2 -translate-y-1/2 bg-primary text-on-primary px-md py-sm rounded-lg font-label-lg transition-all active:scale-95">추가</button>
+</div>
+<div id="custom-allergens-list" class="flex flex-wrap gap-sm">
+<!-- Dynamically filled -->
+</div>
+</section>
+<!-- Sticky Illustration (Asymmetric Content) -->
+<div class="relative w-full h-48 rounded-2xl overflow-hidden mb-xl shadow-lg">
+<img loading="lazy" class="w-full h-full object-cover" data-alt="A top-down aesthetic view of a clean, minimalist table spread featuring fresh vegetables, a glass of water, and a wooden bowl. The scene is bright and airy with soft morning sunlight, emphasizing health and natural ingredients in a high-key light mode style. The colors are dominated by fresh greens and neutral whites, creating a sense of safety and cleanliness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKNx-NeSkEsaWrfFbWx2_nTatjeeGG6n632lxbCg7qN1hb91v0pv23m3qIRUXgzwsjKTtI9FcBLGoKSN3xFL1StSS535-XreNKCZqGY-e3HMJa6yCTK0M--kXkHgtfXnyR5c0yxFA62pMI2YaZ3nn8DqfQID8d8MHK6V3JN5qkD5PlbJaMyLD5gegkVJ1Tdzm7wtzy3aq3D0PBmLgd9kKmqmCxmahn8v2xce1Kce1SsK8sTAiohxppDPrqH4mGqbe9GfYxMsP9ZFw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-md">
+<p class="text-white font-headline-md">당신의 건강한 일상을 응원합니다</p>
+<p class="text-white/80 font-body-sm">AllergyFree와 함께 안전하게 쇼핑하세요</p>
+</div>
+</div>
+<!-- Form Actions -->
+<div class="flex flex-col gap-md">
+<button id="save-allergies-btn" class="w-full h-14 bg-primary text-on-primary rounded-xl font-label-lg shadow-md hover:bg-on-primary-fixed-variant transition-all active:scale-[0.98]">
+                설정 저장하기
+            </button>
+<button id="reset-allergies-btn" class="w-full h-14 bg-transparent text-outline border-2 border-outline-variant rounded-xl font-label-lg hover:bg-surface-container-low transition-all active:scale-[0.98]">
+                전체 초기화
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container-lowest dark:bg-inverse-surface shadow-[0_-4px_12px_rgba(0,0,0,0.04)] rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant active:scale-90 transition-all duration-150 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
+<span class="font-label-sm text-label-sm">Shop</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant active:scale-90 transition-all duration-150 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="barcode_scanner">barcode_scanner</span>
+<span class="font-label-sm text-label-sm">Scan</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant active:scale-90 transition-all duration-150 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-sm text-label-sm">My Pantry</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container dark:bg-on-secondary-fixed-variant text-on-secondary-container dark:text-secondary-fixed rounded-full px-5 py-1 active:scale-90 transition-all duration-150 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</nav>
+<!-- Footer for context (usually at bottom of long scroll) -->
+<footer class="w-full py-xl px-margin-mobile flex flex-col items-center gap-md bg-surface-container-low dark:bg-surface-dim border-t border-outline-variant">
+<p class="text-headline-md font-headline-md font-bold text-on-surface">AllergyFree</p>
+<div class="flex flex-wrap justify-center gap-md">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Support</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Ingredient Sources</a>
+</div>
+<p class="font-body-sm text-body-sm text-outline-variant text-center">© 2024 AllergyFree. Your safety is our priority.</p>
+</footer>
+</body></html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#3d4a3e",
+                    "on-secondary": "#ffffff",
+                    "surface-tint": "#006d37",
+                    "primary-container": "#2ecc71",
+                    "on-primary-fixed": "#00210c",
+                    "tertiary-fixed": "#ffdbd0",
+                    "tertiary-fixed-dim": "#ffb59d",
+                    "surface-container-highest": "#dce5da",
+                    "secondary": "#006b58",
+                    "secondary-fixed": "#6ff9d6",
+                    "surface": "#f3fcf1",
+                    "on-primary-fixed-variant": "#005228",
+                    "surface-container-high": "#e2ebe0",
+                    "secondary-container": "#6cf7d4",
+                    "surface-container": "#e8f0e5",
+                    "on-secondary-fixed": "#002019",
+                    "surface-variant": "#dce5da",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "inverse-primary": "#4ae183",
+                    "surface-bright": "#f3fcf1",
+                    "tertiary-container": "#ff9875",
+                    "inverse-on-surface": "#ebf3e8",
+                    "inverse-surface": "#2b322b",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed-dim": "#4eddbb",
+                    "primary": "#006d37",
+                    "on-primary-container": "#005027",
+                    "primary-fixed": "#6bfe9c",
+                    "primary-fixed-dim": "#4ae183",
+                    "surface-container-low": "#eef6eb",
+                    "outline-variant": "#bbcbbb",
+                    "on-secondary-container": "#00705c",
+                    "on-tertiary-fixed": "#390c00",
+                    "on-background": "#161d17",
+                    "outline": "#6c7b6d",
+                    "on-secondary-fixed-variant": "#005141",
+                    "surface-dim": "#d4dcd2",
+                    "on-surface": "#161d17",
+                    "error": "#ba1a1a",
+                    "surface-container-lowest": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "background": "#f3fcf1",
+                    "tertiary": "#98472a",
+                    "on-tertiary-fixed-variant": "#793015",
+                    "on-tertiary-container": "#772e14"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "gutter": "16px",
+                    "xl": "40px",
+                    "md": "16px",
+                    "base": "4px",
+                    "xs": "4px",
+                    "margin-mobile": "20px",
+                    "container-max": "1200px",
+                    "sm": "8px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-lg": ["28px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                    "display-lg": ["36px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-md": ["22px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      body { background-color: #f3fcf1; }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .safe-glow { box-shadow: 0 0 20px rgba(46, 204, 113, 0.15); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-surface mb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile py-sm max-w-container-max mx-auto bg-surface shadow-sm">
+<div class="flex items-center gap-sm cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">AllergyFree</h1>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer active:scale-95 transition-transform" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer active:scale-95 transition-transform" data-icon="account_circle">account_circle</span>
+</div>
+</header>
+<main class="mt-20 px-margin-mobile flex flex-col gap-lg">
+<!-- Product Header Card -->
+<section class="relative bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-outline-variant">
+<div class="aspect-square w-full relative">
+<img alt="Tomato Soup Can" class="w-full h-full object-cover" data-alt="A high-quality, professional food photography shot of a gourmet organic tomato soup can set against a bright, clean kitchen background. The lighting is soft and natural, emphasizing the rich red colors of the packaging and the fresh ingredients shown on the label. The overall aesthetic is modern, clean, and trustworthy, perfectly fitting the AllergyFree medical-grade safety brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoFcKic-cu-ZYIxgRZGdJl9qgdBkrZVarXg7m2j1UlYUZik9wp85vR4ZGi5nhkFmFUEKl4KcZzCK9MWNRAYuDXBhViWOXzvNETuD2sPMpWjRiY8jwqslAH5xvNIR2K19IYGlT606xxez1f9l6pGP_cdf62IfvhujzUDOIjOkRCeL1quOdzLj5fvB_iwxO2U_T8N9ixQ17vfcbrZs3n8xKeTb78SFL4IUN2UHTM3tdC9PXk5XqcPX0eAEdmkN_gQQMUHN7Uv2C0jNo"/>
+<div class="absolute top-4 right-4 bg-primary-container text-on-primary-container font-label-lg text-label-lg px-4 py-2 rounded-full flex items-center gap-xs shadow-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                    SAFE
+                </div>
+</div>
+<div class="p-lg">
+<h2 class="font-headline-md text-headline-md text-on-surface">오가닉 토마토 바질 수프</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Nature's Harvest Premium Collection</p>
+</div>
+</section>
+<!-- Safety Summary -->
+<section class="bg-primary-container/10 border border-primary/20 rounded-xl p-lg flex flex-col items-center text-center gap-sm safe-glow">
+<div class="w-16 h-16 bg-primary-container rounded-full flex items-center justify-center shadow-lg text-on-primary-container">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<div class="flex flex-col gap-xs">
+<h3 class="font-headline-md text-headline-md text-primary">안전한 식품입니다</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">귀하의 프로필과 일치하는 알레르기 유발 성분이 검출되지 않았습니다. 안심하고 섭취하셔도 좋습니다.</p>
+</div>
+</section>
+<!-- Ingredient Match Analysis Grid -->
+<section class="flex flex-col gap-md">
+<h4 class="font-label-lg text-label-lg text-on-surface-variant uppercase tracking-wider">내 프로필 맞춤 분석</h4>
+<div class="grid grid-cols-2 gap-md">
+<div class="bg-surface-container-low p-md rounded-xl border border-outline-variant flex flex-col gap-sm">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary">water_drop</span>
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Milk Free</p>
+<p class="font-label-lg text-label-lg text-primary">유제품 없음</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-md rounded-xl border border-outline-variant flex flex-col gap-sm">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary">grass</span>
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Peanut Free</p>
+<p class="font-label-lg text-label-lg text-primary">땅콩 없음</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-md rounded-xl border border-outline-variant flex flex-col gap-sm">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary">egg</span>
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Egg Free</p>
+<p class="font-label-lg text-label-lg text-primary">계란 없음</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-md rounded-xl border border-outline-variant flex flex-col gap-sm">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary">grain</span>
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Gluten Free</p>
+<p class="font-label-lg text-label-lg text-primary">글루텐 프리</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Action Buttons -->
+<section class="flex flex-col gap-sm">
+<button class="w-full h-[56px] bg-primary text-on-primary font-label-lg text-label-lg rounded-xl flex items-center justify-center gap-sm active:scale-95 transition-all shadow-md">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                My Pantry에 추가하기
+            </button>
+<button class="w-full h-[56px] bg-transparent border-2 border-primary text-primary font-label-lg text-label-lg rounded-xl flex items-center justify-center gap-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+                결과 공유하기
+            </button>
+</section>
+<!-- Ingredient Highlights -->
+<section class="flex flex-col gap-md">
+<h4 class="font-label-lg text-label-lg text-on-surface-variant uppercase tracking-wider">전체 성분 분석</h4>
+<div class="flex flex-wrap gap-sm">
+<span class="px-4 py-2 bg-primary-container/20 text-on-primary-container border border-primary-container/30 rounded-full font-label-sm text-label-sm flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span> 토마토 퓨레
+                </span>
+<span class="px-4 py-2 bg-primary-container/20 text-on-primary-container border border-primary-container/30 rounded-full font-label-sm text-label-sm flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span> 정제수
+                </span>
+<span class="px-4 py-2 bg-primary-container/20 text-on-primary-container border border-primary-container/30 rounded-full font-label-sm text-label-sm flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span> 바질
+                </span>
+<span class="px-4 py-2 bg-primary-container/20 text-on-primary-container border border-primary-container/30 rounded-full font-label-sm text-label-sm flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span> 천일염
+                </span>
+<span class="px-4 py-2 bg-primary-container/20 text-on-primary-container border border-primary-container/30 rounded-full font-label-sm text-label-sm flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span> 올리브 오일
+                </span>
+<span class="px-4 py-2 bg-primary-container/20 text-on-primary-container border border-primary-container/30 rounded-full font-label-sm text-label-sm flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span> 양파 가루
+                </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">※ 원재료 정보는 제조사의 사정에 따라 예고 없이 변경될 수 있습니다.</p>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-xl px-margin-mobile flex flex-col items-center gap-md bg-surface-container-low border-t border-outline-variant">
+<div class="font-headline-md text-headline-md font-bold text-on-surface">AllergyFree</div>
+<div class="flex flex-wrap justify-center gap-md">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-sm text-body-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-sm text-body-sm" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-sm text-body-sm" href="#">Contact Support</a>
+</div>
+<p class="text-on-surface-variant font-body-sm text-body-sm text-center">© 2024 AllergyFree. Your safety is our priority.</p>
+</footer>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container-lowest shadow-[0_-4px_12px_rgba(0,0,0,0.04)] rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant cursor-pointer active:scale-90 transition-all duration-150 hover:text-primary">
+<span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
+<span class="font-label-sm text-label-sm">Shop</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 active:scale-90 transition-all duration-150">
+<span class="material-symbols-outlined" data-icon="barcode_scanner">barcode_scanner</span>
+<span class="font-label-sm text-label-sm">Scan</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant cursor-pointer active:scale-90 transition-all duration-150 hover:text-primary">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-sm text-label-sm">My Pantry</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant cursor-pointer active:scale-90 transition-all duration-150 hover:text-primary">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<title>AllergyFree - 홈</title>
+<link rel="icon" type="image/png" href="/image/icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+<script src="js/tailwind.config.js"></script>
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/auth.js" defer></script>
+</head>
+<body class="bg-background text-on-surface font-body-md">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface dark:bg-surface-dim shadow-sm">
+<div class="max-w-container-max mx-auto w-full flex justify-between items-center px-margin-mobile py-sm">
+<div class="flex items-center gap-sm">
+<span class="text-headline-lg font-headline-lg font-bold text-primary dark:text-inverse-primary">AllergyFree</span>
+</div>
+<div class="hidden md:flex flex-1 max-w-2xl mx-lg relative">
+<input class="w-full bg-surface-container-low border-none rounded-full px-lg py-sm text-body-md focus:ring-2 focus:ring-primary-container" placeholder="상품명 또는 바코드 검색" type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-2 text-outline cursor-pointer" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-md">
+<a href="/shop" class="text-primary font-bold hover:underline px-xs text-body-md flex items-center gap-xs">
+<span class="material-symbols-outlined">shopping_basket</span>
+<span class="hidden sm:inline">쇼핑몰</span>
+</a>
+<a href="/cart" class="relative cursor-pointer active:scale-95 transition-transform text-primary flex items-center justify-center p-1 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span id="cart-badge" class="absolute -top-1 -right-1 bg-error text-on-error text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full hidden">0</span>
+</a>
+<button class="cursor-pointer active:scale-95 transition-transform text-primary">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button id="header-profile-btn" class="cursor-pointer active:scale-95 transition-transform text-primary">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-[72px] pb-32 px-margin-mobile max-w-container-max mx-auto">
+<!-- Hero Section: User Allergy Profile -->
+<section class="mt-lg mb-xl bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-outline-variant relative overflow-hidden">
+<div class="relative z-10">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-sm">안녕하세요, 김철수 님</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">
+                    현재 <span class="text-error font-bold underline underline-offset-4 decoration-2">우유, 땅콩</span> 알러지가 설정되어 있습니다. 오늘도 안전한 식사를 도와드릴게요.
+                </p>
+<div class="mt-lg flex flex-wrap gap-sm">
+<button class="bg-primary text-on-primary px-lg py-sm rounded-full font-label-lg flex items-center gap-xs hover:bg-opacity-90 transition-colors hidden">
+<span class="material-symbols-outlined text-[18px]" data-icon="settings" data-weight="fill" style="font-variation-settings: 'FILL' 1;">settings</span>
+                        알러지 정보 수정
+                    </button>
+<button class="bg-secondary-container text-on-secondary-container px-lg py-sm rounded-full font-label-lg flex items-center gap-xs hover:bg-opacity-90 transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="barcode_scanner">barcode_scanner</span>
+                        빠른 스캔하기
+                    </button>
+</div>
+</div>
+<!-- Decorative Mint Shape -->
+<div class="absolute -right-12 -top-12 w-48 h-48 bg-primary-container opacity-10 rounded-full blur-3xl"></div>
+</section>
+<!-- Section 1: Today's Recommended Safe Meals -->
+<section class="mb-xl">
+<div class="flex justify-between items-end mb-md">
+<h2 class="font-headline-md text-headline-md text-on-surface">오늘의 추천 안전 메뉴</h2>
+<a class="font-label-lg text-primary" href="#">전체보기</a>
+</div>
+<div id="recommended-recipe-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+<!-- Meal Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group cursor-pointer border border-outline-variant">
+<div class="h-48 overflow-hidden">
+<img loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A vibrant, fresh salad bowl featuring grilled chicken, avocado slices, cherry tomatoes, and quinoa, beautifully plated on a clean white ceramic dish. The lighting is bright and airy, emphasizing the natural textures of the ingredients. The setting is a minimalist, modern wooden table reflecting a high-end lifestyle health aesthetic with soft mint accents and clear daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhVDUQVmKFs4UmdLjdSMaJmClSwMHji-ebX7IvgpJpNMw6ey5emCNu0KYg4a6ZpaSm7-zsoHbmtW7TAlbPfslbZ9hZp0Iu-ltvgBmmIkBIOUB2tOANND3OyJ-zr2KGViMnL3A16bS2CfS3sMcqoguqHjI3p5_e-yAdehkQIzrsBhgIvjJpD8apILCUpv6rbvfSG3tEsfsum4gTyTbDVEKqEuBx3j6ofwIzR1L0IPApmwdpt5a13JMweH3qYca1mVtq51p__A-UjeA"/>
+</div>
+<div class="p-md">
+<div class="flex justify-between items-start mb-xs">
+<h3 class="font-headline-md text-[18px] text-on-surface">퀴노아 아보카도 샐러드</h3>
+<span class="bg-primary-container/20 text-on-primary-container px-sm py-1 rounded-full font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                안전함
+                            </span>
+</div>
+<p class="font-body-sm text-on-surface-variant mb-md">유제품 및 견과류가 포함되지 않은 든든한 한 끼</p>
+<div class="flex gap-xs">
+<span class="bg-surface-container-high px-xs py-1 rounded text-label-sm text-outline">#비건가능</span>
+<span class="bg-surface-container-high px-xs py-1 rounded text-label-sm text-outline">#고단백</span>
+</div>
+</div>
+</div>
+<!-- Meal Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group cursor-pointer border border-outline-variant">
+<div class="h-48 overflow-hidden">
+<img loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A high-angle shot of a Mediterranean Buddha bowl containing sweet potato, chickpeas, spinach, and brown rice, presented in a handcrafted pottery bowl. The lighting is warm and inviting, highlighting a fresh and safe dining experience. The scene is clean and professional, using a soft corporate color palette with plenty of negative space and natural light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwb3j7LFvXZ-MzRaIxv0pmBf33p7BQWO6pK_Jw75P8b-jAuxLDVTF7JUmJhDwshOeah-Z5Z85ntQSBXIS7C-oItBqDwaGwzArQoP6QHrUSGFVkftHz-Y98JxnnLZjPosWz2y1Z-s6JSgPCpJ1lC1kbcRb4I_91Pp1tAz1Z_Dx7wX1NH4Xa6xLfW-WQmf3CtqNk31iQSbeCds4meIwTa9hCO0VHsILz25n5wUMZFB9Iqp2uakqZblrDH4UP5nXC6j2XTpHEnv1VoxU"/>
+</div>
+<div class="p-md">
+<div class="flex justify-between items-start mb-xs">
+<h3 class="font-headline-md text-[18px] text-on-surface">병아리콩 파워 보울</h3>
+<span class="bg-primary-container/20 text-on-primary-container px-sm py-1 rounded-full font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                안전함
+                            </span>
+</div>
+<p class="font-body-sm text-on-surface-variant mb-md">첨가물 없는 순수 자연 식재료 구성</p>
+<div class="flex gap-xs">
+<span class="bg-surface-container-high px-xs py-1 rounded text-label-sm text-outline">#글루텐프리</span>
+<span class="bg-surface-container-high px-xs py-1 rounded text-label-sm text-outline">#저염식</span>
+</div>
+</div>
+</div>
+<!-- Meal Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group cursor-pointer border border-outline-variant">
+<div class="h-48 overflow-hidden">
+<img loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A delicious, steaming bowl of vegetable noodle soup with clear broth and colorful bell peppers, carrots, and scallions. The photograph is taken in a bright, modern kitchen setting with clean lines and soft lighting. The visual style is crisp and appetizing, emphasizing food safety and clarity in a premium lifestyle context with mint-colored accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkNB7Klbryy2iN5ALDZYZXhRNfBW1J8ozxK1hUJ8vJFgarCe-AD9_lvSL8W_Un3x-5QhRKPUWReXLDX-kqsqJbYJWUvPbxIOx6ohfkGXMZ-Fj8lkAL6DugL2jzhP6ABrJTe_ShNSim46C6N8KjZW06b4Edqz3m0hP-848JtgUMh42ATjODlaW3F6M00QRwvwkBv9iaFrbRwPJNXqS2QV36RiOxUCmFsijovMbzXphkegThf3pzCRRdz0MHPMM8Lxq89HsrITKnKXY"/>
+</div>
+<div class="p-md">
+<div class="flex justify-between items-start mb-xs">
+<h3 class="font-headline-md text-[18px] text-on-surface">소고기 야채 맑은 탕</h3>
+<span class="bg-primary-container/20 text-on-primary-container px-sm py-1 rounded-full font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                안전함
+                            </span>
+</div>
+<p class="font-body-sm text-on-surface-variant mb-md">가정에서 만든 듯한 깨끗한 육수와 채소</p>
+<div class="flex gap-xs">
+<span class="bg-surface-container-high px-xs py-1 rounded text-label-sm text-outline">#홈메이드</span>
+<span class="bg-surface-container-high px-xs py-1 rounded text-label-sm text-outline">#따뜻한</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Recently Viewed Safe Products -->
+<section class="mb-xl">
+<div class="flex justify-between items-end mb-md">
+<h2 class="font-headline-md text-headline-md text-on-surface">최종 확인한 안전식품</h2>
+<a id="recent-safe-food-more-link" class="font-label-lg text-primary hidden" href="/viewed_products">더 보기</a>
+</div>
+<div id="recent-safe-food-container" class="flex gap-md overflow-x-auto pb-md scrollbar-hide">
+  <!-- Dynamic single product card will be injected here -->
+</div>
+</section>
+<!-- Features Bento Section -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div onclick="window.location.href='/scan'" class="bg-primary-container text-on-primary-container p-lg rounded-xl flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all">
+<div>
+<h3 class="font-headline-md text-headline-md mb-xs">성분 스캐너</h3>
+<p class="font-body-sm opacity-90">제품의 바코드를 찍어 알러지 성분을 확인하세요</p>
+</div>
+<div class="bg-on-primary-container/10 p-md rounded-full">
+<span class="material-symbols-outlined text-[40px]" data-icon="barcode_scanner">barcode_scanner</span>
+</div>
+</div>
+<div onclick="window.location.href='/map'" class="bg-secondary-container text-on-secondary-container p-lg rounded-xl flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all">
+<div>
+<h3 class="font-headline-md text-headline-md mb-xs">주변 안전 음식점</h3>
+<p class="font-body-sm opacity-90">내 알러지에 안전한 식당을 찾아보세요</p>
+</div>
+<div class="bg-on-secondary-container/10 p-md rounded-full">
+<span class="material-symbols-outlined text-[40px]" data-icon="location_on">location_on</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container-lowest shadow-[0_-4px_12px_rgba(0,0,0,0.04)] rounded-t-xl md:hidden">
+<div class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all duration-150">
+<span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
+<span class="font-label-sm text-label-sm">Shop</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all duration-150">
+<span class="material-symbols-outlined" data-icon="barcode_scanner">barcode_scanner</span>
+<span class="font-label-sm text-label-sm">Scan</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 active:scale-90 transition-all duration-150">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-sm text-label-sm">My Pantry</span>
+</div>
+<div id="mobile-profile-btn" class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all duration-150 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</nav>
+<!-- Footer -->
+<footer class="w-full py-xl px-margin-mobile flex flex-col items-center gap-md border-t border-outline-variant bg-surface-container-low mb-16 md:mb-0">
+<span class="text-headline-md font-headline-md font-bold text-on-surface">AllergyFree</span>
+<div class="flex flex-wrap justify-center gap-lg">
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Contact Support</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Ingredient Sources</a>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">© 2024 AllergyFree. Your safety is our priority.</p>
+</footer>
+</body></html>

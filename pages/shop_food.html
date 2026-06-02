@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<title>AllergyFree - 상품 상세</title>
+<link rel="icon" type="image/png" href="/image/icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+<script src="../js/tailwind.config.js"></script>
+<link rel="stylesheet" href="../css/styles.css">
+<script src="../js/auth.js" defer></script>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased mb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface dark:bg-surface-dim shadow-sm">
+<div class="max-w-container-max mx-auto w-full flex justify-between items-center px-margin-mobile py-sm">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary cursor-pointer active:scale-95 transition-transform" data-icon="arrow_back">arrow_back</span>
+<span class="text-headline-lg font-headline-lg font-bold text-primary dark:text-inverse-primary">AllergyFree</span>
+</div>
+<div class="hidden md:flex flex-1 max-w-2xl mx-lg relative">
+<input class="w-full bg-surface-container-low border-none rounded-full px-lg py-sm text-body-md focus:ring-2 focus:ring-primary-container" placeholder="상품명 또는 바코드 검색" type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-2 text-outline cursor-pointer" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-md">
+<a href="/shop" class="text-primary font-bold hover:underline px-xs text-body-md flex items-center gap-xs">
+<span class="material-symbols-outlined">shopping_basket</span>
+<span class="hidden sm:inline">쇼핑몰</span>
+</a>
+<a href="/cart" class="relative cursor-pointer active:scale-95 transition-transform text-primary flex items-center justify-center p-1 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span id="cart-badge" class="absolute -top-1 -right-1 bg-error text-on-error text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full hidden">0</span>
+</a>
+<button class="cursor-pointer active:scale-95 transition-transform text-primary">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button id="header-profile-btn" class="cursor-pointer active:scale-95 transition-transform text-primary">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-20 px-margin-mobile max-w-container-max mx-auto space-y-lg">
+<!-- Product Hero Section -->
+<section class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-outline-variant">
+<div class="md:grid md:grid-cols-2 gap-0">
+<div class="relative h-64 md:h-[530px] flex items-center justify-center bg-surface-container overflow-hidden">
+<img loading="lazy" id="product-detail-img" alt="Product Image" class="max-w-full max-h-full object-contain p-4" src=""/>
+<div class="absolute top-4 left-4">
+<span id="product-detail-badge" class="bg-primary text-on-primary px-4 py-2 rounded-full font-label-lg flex items-center gap-xs shadow-lg">
+<span id="product-detail-badge-icon" class="material-symbols-outlined text-[20px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span id="product-detail-badge-text">안전한 식품</span>
+</span>
+</div>
+</div>
+<div class="p-lg flex flex-col justify-center space-y-sm">
+                    <div class="text-[12px] text-on-surface-variant font-semibold mb-xs flex items-center gap-xs">
+                        <span>상품 카테고리</span>
+                        <span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+                        <span id="product-detail-category-path" class="text-primary font-bold"></span>
+                    </div>
+                    <p id="product-detail-brand" class="font-label-sm text-outline uppercase tracking-wider"></p>
+                    <h1 id="product-detail-title" class="font-headline-lg text-headline-lg text-on-surface"></h1>
+                    <div id="product-option-container" class="py-sm hidden">
+                      <label for="product-option-select" class="block text-label-sm text-on-surface-variant mb-xs font-semibold">용량 / 옵션 선택</label>
+                      <select id="product-option-select" class="w-full bg-surface-container-low border border-outline rounded-lg px-md py-sm text-body-md focus:ring-2 focus:ring-primary focus:outline-none transition-all"></select>
+                    </div>
+                    <div class="py-xs">
+                        <span id="product-detail-price" class="text-headline-md font-bold text-[#1b5e20] dark:text-[#81c784]"></span>
+                    </div>
+                    <div id="product-detail-warning-text" class="flex items-center gap-xs text-secondary font-label-lg">
+                        <span id="product-detail-warning-icon" class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+                        <span id="product-detail-warning-message">사용자님의 알레르기 설정에 안전한 제품입니다.</span>
+                    </div>
+                    <p id="product-detail-desc" class="text-on-surface-variant font-body-sm pt-sm"></p>
+                    <div id="product-detail-actions" class="flex gap-md pt-md">
+                        <button id="add-to-cart-detail-btn" class="flex-1 py-3 px-lg border-2 border-primary text-primary rounded-xl font-label-lg flex items-center justify-center gap-xs hover:bg-primary/5 active:scale-95 transition-all cursor-pointer">
+                            <span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+                            장바구니 추가
+                        </button>
+                        <button id="quick-buy-detail-btn" class="flex-1 py-3 px-lg bg-primary text-on-primary rounded-xl font-label-lg flex items-center justify-center gap-xs shadow-sm hover:bg-primary/95 active:scale-95 transition-all cursor-pointer">
+                            <span class="material-symbols-outlined text-[20px]">bolt</span>
+                            빠른 구매
+                        </button>
+                    </div>
+</div>
+</div>
+</section>
+<!-- Analysis Section: Bento Style -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Main Ingredient Analysis -->
+<div class="md:col-span-2 bg-surface-container-lowest p-lg rounded-xl border border-outline-variant space-y-md">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="analytics">analytics</span>
+                        성분 정밀 분석
+                    </h2>
+<span class="text-body-sm text-outline">분석 업데이트: 2024.05.20</span>
+</div>
+<div id="product-detail-analysis-box" class="p-md bg-surface-container-low rounded-lg border-l-4 border-primary">
+<p id="product-detail-analysis-text" class="text-on-surface font-body-md">
+</p>
+</div>
+<div class="space-y-sm">
+<h3 class="font-label-lg text-on-surface-variant">전성분 리스트</h3>
+<div id="product-detail-ingredients" class="flex flex-wrap gap-xs">
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-md pt-md">
+<div class="p-md rounded-lg bg-surface-container-low flex gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="factory">factory</span>
+<div>
+<p class="font-label-lg text-on-surface">제조 공정 확인</p>
+<p class="text-body-sm text-on-surface-variant">엄격한 공정 분리 라인에서 안전하게 생산되었습니다.</p>
+</div>
+</div>
+<div class="p-md rounded-lg bg-surface-container-low flex gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="assignment_turned_in">assignment_turned_in</span>
+<div>
+<p class="font-label-lg text-on-surface">인증 정보</p>
+<p class="text-body-sm text-on-surface-variant">HACCP, 유기농 및 안심 식품 인증이 완료되었습니다.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Caution/Status Card -->
+<div id="product-detail-guide-card" class="bg-primary-container/10 p-lg rounded-xl border border-primary/20 flex flex-col justify-between">
+<div>
+<div id="product-detail-guide-icon-bg" class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-md">
+<span id="product-detail-guide-icon" class="material-symbols-outlined text-on-primary" data-icon="health_and_safety">health_and_safety</span>
+</div>
+<h3 id="product-detail-guide-title" class="font-headline-md text-on-primary-container mb-sm">안전 가이드</h3>
+<p id="product-detail-guide-text" class="text-body-md text-on-surface-variant leading-relaxed">
+</div>
+</div>
+</section>
+<!-- Recommendation Section -->
+<section class="space-y-md">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary" data-icon="recommend">recommend</span>
+                    대체 상품 추천
+                </h2>
+<button class="text-primary font-label-lg flex items-center">
+                    전체보기 <span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<div id="product-detail-recommendations" class="grid grid-cols-2 md:grid-cols-4 gap-md">
+<div class="bg-surface-container-lowest p-sm rounded-xl border border-outline-variant hover:shadow-md transition-shadow cursor-pointer">
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden mb-sm">
+<img loading="lazy" alt="Oat Milk" class="w-full h-full object-cover" data-alt="A clean product shot of an oat milk carton standing beside a wooden spoon filled with raw oats. The lighting is bright and even, highlighting the eco-friendly packaging. The overall aesthetic is minimalist and health-conscious, consistent with a modern corporate health application style using soft greens and natural tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNJlzeGpK2AXtGrLghVEXsWsIMQXmgLCRP4nUNsitMF_IBsDRbl6KduKEoLDUx4u6iqVrm-DUwYIm_He0fVb6pi4bXdYlfRLFLRE4k2wSS4A_75JG02wQtvN9B3wMEbfx3XWV5xwZHfG5aqUIO-UbQAOcfQraI0CTC6py-GS1nihTfFAiN2k4Je1-RlUHm8Xldret6jwxownFOt4V40DhwZ-RREmk7xlk3fBG3nlrw7EqCH9UwHp6SeCfI7ONg3hWvRvWv_WqMyWI"/>
+</div>
+<p class="font-label-sm text-outline">오트밀크 전문</p>
+<p class="font-body-md text-on-surface truncate">유기농 귀리 우유</p>
+<span class="text-xs font-bold text-primary">SAFE</span>
+</div>
+<div class="bg-surface-container-lowest p-sm rounded-xl border border-outline-variant hover:shadow-md transition-shadow cursor-pointer">
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden mb-sm">
+<img loading="lazy" alt="Soy Milk" class="w-full h-full object-cover" data-alt="A professional product photograph of a simple glass bottle of soy milk, surrounded by a few dried soybeans on a clean white surface. High-key lighting creates a sterile yet welcoming medical-grade clarity. The focus is sharp on the liquid texture, conveying purity and safety within a modern corporate UI context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOX5wSmD3Ybgngd1GfjY7qgw96Bmyhb1rsLOKRMBlGOx_NBDDoCmka-3kw86Y6v1fXeZP45U-CO3Td2OEaDRhKSqQo6wfIIXc3jQjFe46nRFFu2kka0uKke2Xp9t1abITNUnztAVEORz4VtdrdjPBzjoLmId90z5if_EsVrI2W2G3T6Bj68xI7ZzbluV-uhW5aetG7L3M31l8ZhA2CFmHRb8221uq3K5Pm5PYMWa4IHKW990OK7L-0p7dg10RO5injT5KNREu7Ra4"/>
+</div>
+<p class="font-label-sm text-outline">데일리 콩</p>
+<p class="font-body-md text-on-surface truncate">고단백 무가당 두유</p>
+<span class="text-xs font-bold text-primary">SAFE</span>
+</div>
+<div class="bg-surface-container-lowest p-sm rounded-xl border border-outline-variant hover:shadow-md transition-shadow cursor-pointer">
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden mb-sm">
+<img loading="lazy" alt="Coconut Milk" class="w-full h-full object-cover" data-alt="A bright, high-contrast studio photograph of a refreshing coconut milk drink in a glass bottle. The background is a soft, pale green, suggesting freshness and health. Soft shadows and clear details create a sense of professional reliability and clean design, suitable for a health-tracking application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChHg7MqNz1ph3oxvioCz7hWaaeqVRzXatqTEAjs30FQELisK62ImuiG_jLs1Zq8RQQLuPF5XWSorf0JaLuVH6y4NFj2YXggVglEIasC-e6c8dqWUsmAw1iHjBmgOWz-gr1pBkaAABQumw93hAp7n5s_nwp7FOnkI9qlbLoCUlC_xGxKNYWcWXDfRJ5RpFX4YhOs7U91pjwUMDkzUgCF1rTusDMKHjSSup8eClI3qY50JSMGgLTwYkmvvHwwG08JL0YikYXgokHwiY"/>
+</div>
+<p class="font-label-sm text-outline">코코나우</p>
+<p class="font-body-md text-on-surface truncate">코코넛 워터 밀크</p>
+<span class="text-xs font-bold text-primary">SAFE</span>
+</div>
+<div class="bg-surface-container-lowest p-sm rounded-xl border border-outline-variant hover:shadow-md transition-shadow cursor-pointer">
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden mb-sm">
+<img loading="lazy" alt="Rice Milk" class="w-full h-full object-cover" data-alt="A minimalist and high-end product shot of a rice milk container set against a pristine, bright background. The lighting is soft and diffused, emphasizing the pure white color of the product. The visual style is modern, clinical yet warm, aligning with the brand values of safety and clarity for food allergy management." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeP-g-CPFjeFXkCZLT_sbIVRKVaCTwq5SAvNisY71_WHCCVJg3RjixGOE4CEDVACl_9Zv76GHmkOgjp3vNI1MNScpgEICGw9Dc8hb8yLYlVBTaI6HVL3N-uZvMu8jr4Qt2Fli60NEoL0qS7o0GJeBw-qYOFJYWBdTWla7cr6nvHmL90meZ0njk57ev7Va1_A0cWAuY6ZR1_6VQwwvZ77EIzOM_8As6i6DKGyMa9uFoxt_ECSkJNO2sLFMzR0r_ruQ-DxbiEQoWrK8"/>
+</div>
+<p class="font-label-sm text-outline">퓨어 라이스</p>
+<p class="font-body-md text-on-surface truncate">저칼로리 쌀우유</p>
+<span class="text-xs font-bold text-primary">SAFE</span>
+</div>
+</div>
+</section>
+<!-- Social Reviews Section -->
+<section class="space-y-md">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="forum">forum</span>
+                    함께 나누는 리뷰
+                </h2>
+<div class="flex items-center gap-xs">
+<span class="font-bold text-on-surface">4.8</span>
+<div class="flex text-tertiary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</div>
+</div>
+<div class="space-y-md">
+<!-- Review Card 1 -->
+<div class="p-md bg-white rounded-xl border border-outline-variant shadow-sm space-y-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-primary">김</div>
+<div>
+<p class="font-label-lg text-on-surface">김지수님 <span class="ml-2 px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded text-[10px]">유제품 알레르기</span></p>
+<p class="text-[12px] text-outline">2일 전</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="more_vert">more_vert</span>
+</div>
+<p class="text-body-md text-on-surface-variant">
+                        유제품 알레르기가 심해서 우유 대신 마실 걸 찾다가 정착했어요. 성분표 분석이 정확해서 믿고 마십니다. 맛도 비리지 않고 고소해서 커피랑 잘 어울려요!
+                    </p>
+<div class="flex items-center gap-md pt-xs">
+<button class="flex items-center gap-xs text-outline hover:text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="thumb_up">thumb_up</span>
+<span class="text-label-sm">12</span>
+</button>
+<button class="flex items-center gap-xs text-outline">
+<span class="material-symbols-outlined text-[18px]" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-label-sm">댓글 2</span>
+</button>
+</div>
+</div>
+<!-- Review Card 2 -->
+<div class="p-md bg-white rounded-xl border border-outline-variant shadow-sm space-y-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-primary">박</div>
+<div>
+<p class="font-label-lg text-on-surface">박민호님 <span class="ml-2 px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded text-[10px]">밀 알레르기</span></p>
+<p class="text-[12px] text-outline">1주일 전</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="more_vert">more_vert</span>
+</div>
+<p class="text-body-md text-on-surface-variant">
+                        아이 간식으로 주려고 구매했는데 아이도 잘 마시네요. 무엇보다 AllergyFree에서 안전 마크가 뜨니까 장볼 때 고민할 시간이 줄어들어서 너무 편해요.
+                    </p>
+<div class="flex items-center gap-md pt-xs">
+<button class="flex items-center gap-xs text-outline hover:text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="thumb_up">thumb_up</span>
+<span class="text-label-sm">8</span>
+</button>
+<button class="flex items-center gap-xs text-outline">
+<span class="material-symbols-outlined text-[18px]" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-label-sm">댓글 0</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-xl px-margin-mobile flex flex-col items-center gap-md bg-surface-container-low border-t border-outline-variant mt-xl">
+<div class="text-headline-md font-headline-md font-bold text-on-surface">AllergyFree</div>
+<div class="flex flex-wrap justify-center gap-md">
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Contact Support</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Ingredient Sources</a>
+</div>
+<p class="text-on-surface-variant font-body-sm text-center">© 2024 AllergyFree. Your safety is our priority.</p>
+</footer>
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container-lowest shadow-[0_-4px_12px_rgba(0,0,0,0.04)] rounded-t-xl">
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1">
+<span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
+<span class="font-label-sm text-label-sm">Shop</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="barcode_scanner">barcode_scanner</span>
+<span class="font-label-sm text-label-sm">Scan</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-sm text-label-sm">My Pantry</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</nav>
+</body></html>

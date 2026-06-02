@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html class="light" lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <title>AllergyFree - 최종 확인한 식품 목록</title>
+  <link rel="icon" type="image/png" href="/image/icon.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  
+  <script src="../js/tailwind.config.js"></script>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="../js/auth.js" defer></script>
+</head>
+<body class="bg-background text-on-surface font-body-md">
+  <!-- TopAppBar -->
+  <header class="fixed top-0 left-0 w-full z-50 bg-surface dark:bg-surface-dim shadow-sm">
+    <div class="max-w-container-max mx-auto w-full flex justify-between items-center px-margin-mobile py-sm">
+      <div class="flex items-center gap-sm">
+        <span class="material-symbols-outlined text-primary cursor-pointer active:scale-95 transition-transform" data-icon="arrow_back">arrow_back</span>
+        <span class="text-headline-lg font-headline-lg font-bold text-primary dark:text-inverse-primary">AllergyFree</span>
+      </div>
+      <div class="hidden md:flex flex-1 max-w-2xl mx-lg relative">
+        <input class="w-full bg-surface-container-low border-none rounded-full px-lg py-sm text-body-md focus:ring-2 focus:ring-primary-container" placeholder="상품명 또는 바코드 검색" type="text"/>
+        <span class="material-symbols-outlined absolute right-4 top-2 text-outline cursor-pointer" data-icon="search">search</span>
+      </div>
+      <div class="flex items-center gap-md">
+        <a href="/shop" class="text-primary font-bold hover:underline px-xs text-body-md flex items-center gap-xs">
+          <span class="material-symbols-outlined">shopping_basket</span>
+          <span class="hidden sm:inline">쇼핑몰</span>
+        </a>
+        <a href="/cart" class="relative cursor-pointer active:scale-95 transition-transform text-primary flex items-center justify-center p-1 rounded-full hover:bg-surface-container-high">
+          <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+          <span id="cart-badge" class="absolute -top-1 -right-1 bg-error text-on-error text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full hidden">0</span>
+        </a>
+        <button class="cursor-pointer active:scale-95 transition-transform text-primary">
+          <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+        </button>
+        <button id="header-profile-btn" class="cursor-pointer active:scale-95 transition-transform text-primary">
+          <span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-[80px] pb-[120px] px-margin-mobile max-w-container-max mx-auto space-y-lg">
+    <!-- Header Section -->
+    <section>
+      <h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">최종 확인한 안전식품 전체목록</h2>
+      <p class="font-body-md text-body-md text-on-surface-variant">그동안 스캔하거나 상세 정보를 확인했던 상품들의 안전 상태를 확인하세요.</p>
+    </section>
+
+    <!-- Grid Container -->
+    <section id="viewed-products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-md">
+      <!-- Generated dynamically in JS -->
+    </section>
+
+    <!-- Empty State -->
+    <section id="viewed-products-empty-state" class="hidden py-xl px-md text-center bg-surface-container-lowest border border-outline-variant/30 rounded-xl space-y-md">
+      <span class="material-symbols-outlined text-outline text-[48px]">history</span>
+      <div class="space-y-xs">
+        <p class="font-headline-md text-on-surface font-bold">확인한 상품 이력이 없습니다</p>
+        <p class="text-body-sm text-on-surface-variant">상품 바코드를 스캔하거나 쇼핑몰에서 구경해보세요.</p>
+      </div>
+      <button onclick="window.location.href='/shop'" class="px-md py-sm bg-primary text-on-primary rounded-xl font-label-lg shadow-sm active:scale-95 transition-all">
+        상품 보러 가기
+      </button>
+    </section>
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container-lowest dark:bg-inverse-surface shadow-lg rounded-t-xl">
+    <div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant active:scale-90 transition-all duration-150">
+      <span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
+      <span class="font-label-sm text-label-sm">Shop</span>
+    </div>
+    <div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant active:scale-90 transition-all duration-150">
+      <span class="material-symbols-outlined" data-icon="barcode_scanner">barcode_scanner</span>
+      <span class="font-label-sm text-label-sm">Scan</span>
+    </div>
+    <div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant active:scale-90 transition-all duration-150">
+      <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+      <span class="font-label-sm text-label-sm">My Pantry</span>
+    </div>
+    <div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant active:scale-90 transition-all duration-150">
+      <span class="material-symbols-outlined" data-icon="person">person</span>
+      <span class="font-label-sm text-label-sm">Profile</span>
+    </div>
+  </nav>
+</body>
+</html>
