@@ -3267,7 +3267,7 @@ async function loadRecommendedRecipes(userAllergies = []) {
   const startIdx = Math.floor(Math.random() * 90) + 1;
   const endIdx = startIdx + 3;
   const apiKey = "a221b8145b894fa99895";
-  const url = `http://openapi.foodsafetykorea.go.kr/api/${apiKey}/COOKRCP01/json/${startIdx}/${endIdx}`;
+  const url = `https://openapi.foodsafetykorea.go.kr/api/${apiKey}/COOKRCP01/json/${startIdx}/${endIdx}`;
 
   let recipes = [];
 
@@ -3368,7 +3368,7 @@ async function initRecipePage(userAllergies = []) {
   if (!recipe) {
     try {
       const apiKey = "a221b8145b894fa99895";
-      const url = `http://openapi.foodsafetykorea.go.kr/api/${apiKey}/COOKRCP01/json/1/1/RCP_SEQ=${recipeId}`;
+      const url = `https://openapi.foodsafetykorea.go.kr/api/${apiKey}/COOKRCP01/json/1/1/RCP_SEQ=${recipeId}`;
       const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();

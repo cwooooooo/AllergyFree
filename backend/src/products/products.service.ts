@@ -56,7 +56,7 @@ export class ProductsService {
 
     // 1. Check Food Safety Korea I2570 OpenAPI
     try {
-      const foodSafetyUrl = `http://openapi.foodsafetykorea.go.kr/api/a221b8145b894fa99895/I2570/json/1/1/BRCD_NO=${barcode}`;
+      const foodSafetyUrl = `https://openapi.foodsafetykorea.go.kr/api/a221b8145b894fa99895/I2570/json/1/1/BRCD_NO=${barcode}`;
       const foodSafetyRes = await fetch(foodSafetyUrl);
       if (foodSafetyRes.ok) {
         const foodSafetyJson = (await foodSafetyRes.json()) as any;
