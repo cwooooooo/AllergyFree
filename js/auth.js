@@ -2753,6 +2753,9 @@ function initHomePage(userAllergies = []) {
   const container = document.getElementById('recent-safe-food-container');
   if (!container) return;
 
+  // Load recommended recipes first so it's not blocked by empty history early return
+  loadRecommendedRecipes(userAllergies);
+
   let history = [];
   const storedHistory = localStorage.getItem('viewedProductsHistory');
   if (storedHistory) {
@@ -2845,7 +2848,6 @@ function initHomePage(userAllergies = []) {
     `;
     container.appendChild(card);
   });
-  loadRecommendedRecipes(userAllergies);
 }
 
 function initViewedProductsPage(userAllergies = []) {
