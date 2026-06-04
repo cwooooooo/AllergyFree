@@ -144,6 +144,30 @@
           <!-- Populated dynamically -->
         </div>
       </div>
+
+      <!-- Floating List Button for Mobile -->
+      <button id="mobile-list-toggle-btn" class="absolute bottom-6 right-4 z-10 md:hidden bg-primary text-on-primary px-lg py-md rounded-full font-label-lg shadow-lg active:scale-95 hover:bg-opacity-95 transition-all flex items-center gap-xs hidden">
+        <span class="material-symbols-outlined text-[20px]">list</span>
+        목록 보기
+      </button>
+
+      <!-- Mobile Restaurant List Drawer (Slides up when button is clicked / hidden on Desktop) -->
+      <div class="absolute bottom-4 left-4 right-4 z-20 bg-white/95 backdrop-blur-md rounded-2xl border border-outline-variant/30 shadow-xl p-lg transform translate-y-full transition-transform duration-300 md:hidden flex flex-col max-h-[60%] overflow-hidden" id="mobile-list-drawer">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-sm border-b border-outline-variant/10 pb-sm shrink-0">
+          <div>
+            <h3 class="font-headline-md text-on-surface font-bold text-base">주변 식당 목록</h3>
+            <p class="text-body-sm text-outline" id="mobile-list-count">검색된 식당 0개</p>
+          </div>
+          <button id="close-list-drawer-btn" class="text-outline hover:text-on-surface p-1 rounded-full hover:bg-surface-container-high">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <!-- Scrollable list -->
+        <div class="flex-1 overflow-y-auto space-y-md py-sm" id="mobile-list-content">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
     </div>
   </main>
 
@@ -389,6 +413,19 @@
       // Close mobile drawer handle
       document.getElementById('close-drawer-btn').addEventListener('click', () => {
         document.getElementById('mobile-detail-drawer').classList.add('translate-y-full');
+      });
+
+      // Bind mobile list toggle button
+      document.getElementById('mobile-list-toggle-btn').addEventListener('click', () => {
+        const mobileListDrawer = document.getElementById('mobile-list-drawer');
+        mobileListDrawer.classList.remove('translate-y-full');
+        // Hide detail drawer if open
+        document.getElementById('mobile-detail-drawer').classList.add('translate-y-full');
+      });
+
+      // Close mobile list drawer handle
+      document.getElementById('close-list-drawer-btn').addEventListener('click', () => {
+        document.getElementById('mobile-list-drawer').classList.add('translate-y-full');
       });
     }
 
@@ -709,9 +746,31 @@
       
       const listContainer = document.getElementById('restaurant-list-container');
       listContainer.innerHTML = '';
+
+      const mobileListContent = document.getElementById('mobile-list-content');
+      if (mobileListContent) {
+        mobileListContent.innerHTML = '';
+      }
+
+      const mobileListCount = document.getElementById('mobile-list-count');
+      if (mobileListCount) {
+        mobileListCount.innerText = `검색된 식당 ${currentPlaces.length}개`;
+      }
+
+      const mobileListToggleBtn = document.getElementById('mobile-list-toggle-btn');
+      if (mobileListToggleBtn) {
+        if (currentPlaces.length > 0) {
+          mobileListToggleBtn.classList.remove('hidden');
+        } else {
+          mobileListToggleBtn.classList.add('hidden');
+        }
+      }
       
       if (currentPlaces.length === 0) {
         listContainer.innerHTML = `<p class="text-center py-xl text-outline text-body-sm italic">선택 반경 내 음식점 결과가 없습니다.</p>`;
+        if (mobileListContent) {
+          mobileListContent.innerHTML = `<p class="text-center py-xl text-outline text-body-sm italic">검색된 결과가 없습니다.</p>`;
+        }
         return;
       }
 
@@ -743,7 +802,7 @@
           selectPlace(place);
         });
 
-        // 2. Add to Sidebar List Card
+        // 2. Add to Sidebar List Card (Desktop)
         const listCard = document.createElement('div');
         listCard.className = `p-md rounded-xl border transition-all cursor-pointer select-none relative ${
           selectedPlaceId === place.id 
@@ -760,7 +819,7 @@
           badgeHtml = `<span class="bg-[#e53935]/20 text-[#c62828] text-[10px] font-bold px-sm py-0.5 rounded-full flex items-center gap-xs"><span class="material-symbols-outlined text-[12px] font-bold">cancel</span>섭취 불가</span>`;
         }
 
-        listCard.innerHTML = `
+        const cardInner = `
           <div class="flex justify-between items-start gap-xs">
             <h4 class="font-headline-sm text-on-surface font-bold truncate pr-md text-[14px]">${place.name}</h4>
             ${badgeHtml}
@@ -773,6 +832,7 @@
             </a>
           </div>
         `;
+        listCard.innerHTML = cardInner;
 
         listCard.addEventListener('click', () => {
           map.panTo(latLng);
@@ -780,6 +840,26 @@
         });
 
         listContainer.appendChild(listCard);
+
+        // 3. Add to Mobile List Card (Mobile)
+        if (mobileListContent) {
+          const mobileListCard = document.createElement('div');
+          mobileListCard.className = `p-md rounded-xl border transition-all cursor-pointer select-none relative ${
+            selectedPlaceId === place.id 
+              ? 'bg-primary-container/10 border-primary ring-1 ring-primary' 
+              : 'bg-white border-outline-variant hover:border-primary/50'
+          }`;
+          mobileListCard.innerHTML = cardInner;
+          mobileListCard.addEventListener('click', () => {
+            map.panTo(latLng);
+            selectPlace(place);
+            const mobileListDrawer = document.getElementById('mobile-list-drawer');
+            if (mobileListDrawer) {
+              mobileListDrawer.classList.add('translate-y-full');
+            }
+          });
+          mobileListContent.appendChild(mobileListCard);
+        }
       });
     }
 
@@ -808,6 +888,12 @@
       
       const drawer = document.getElementById('mobile-detail-drawer');
       drawer.classList.remove('translate-y-full');
+
+      // Close mobile list drawer when showing restaurant detail drawer
+      const listDrawer = document.getElementById('mobile-list-drawer');
+      if (listDrawer) {
+        listDrawer.classList.add('translate-y-full');
+      }
 
       // 2. Desktop sidebar detail option
       // Let's also display the detailed menus overlay in the sidebar for desktop users.
