@@ -12,6 +12,7 @@ export declare class RestaurantsService {
     private readonly dbService;
     private readonly logger;
     private readonly fallbackCategoryMap;
+    private readonly menuIngredientMap;
     constructor(dbService: DatabaseService);
     getUserAllergyKeywords(userId: number): Promise<{
         name: string;
@@ -19,8 +20,8 @@ export declare class RestaurantsService {
     }[]>;
     analyzeNearbyRestaurants(userId: number, places: PlaceInfo[]): Promise<{
         safety: string;
-        safeMenus: string[];
-        unsafeMenus: string[];
+        safeMenus: never[];
+        unsafeMenus: never[];
         hasMenuData: boolean;
         message: string;
         id: string;
@@ -31,6 +32,14 @@ export declare class RestaurantsService {
         address_name: string;
         place_url: string;
     }[]>;
+    getRestaurantMenu(placeId: string, userId: number): Promise<{
+        id: string;
+        safety: string;
+        safeMenus: any[];
+        unsafeMenus: any[];
+        hasMenuData: boolean;
+        message: string;
+    }>;
     private analyzeByFallback;
 }
 export {};

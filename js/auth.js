@@ -1364,6 +1364,12 @@ function renderProductDetail(product, userAllergies) {
   const titleEl = document.getElementById('product-detail-title');
   if (titleEl) titleEl.textContent = product.name;
 
+  // Set Naver Shopping external purchase link
+  const naverShopLink = document.getElementById('naver-shop-link');
+  if (naverShopLink && product.name) {
+    naverShopLink.href = `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(product.name)}`;
+  }
+
   const priceEl = document.getElementById('product-detail-price');
   if (priceEl) {
     const formattedPrice = product.price ? `₩${Number(product.price).toLocaleString()}` : '가격 정보 없음';

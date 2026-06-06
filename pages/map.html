@@ -171,6 +171,15 @@
     </div>
   </main>
 
+  <!-- Floating Tooltip for Hovering Menus -->
+  <div id="menu-image-tooltip" class="fixed z-[999] hidden bg-white border border-outline-variant/30 rounded-2xl shadow-xl p-1 pointer-events-none w-48 overflow-hidden transform -translate-x-1/2 -translate-y-full mt-[-8px] transition-opacity duration-200 opacity-0">
+    <img id="tooltip-img" src="" class="w-full h-32 object-cover rounded-xl" alt="메뉴 이미지"/>
+    <div class="px-2 py-1.5">
+      <div id="tooltip-name" class="text-xs font-bold text-on-surface truncate"></div>
+      <div id="tooltip-price" class="text-[10px] text-outline truncate mt-0.5"></div>
+    </div>
+  </div>
+
   <!-- Map Application Logic -->
   <script>
     // Global Error Logger for robust debugging
@@ -864,7 +873,7 @@
     }
 
     /**
-     * Handle place selection (opens drawer/cards)
+     * Handle place selection (opens drawer/cards and fetches menu dynamically)
      */
     function selectPlace(place) {
       selectedPlaceId = place.id;
@@ -872,19 +881,21 @@
       // Rerender list to highlight the active card
       renderPlacesOnMapAndList();
 
-      // Get menu list details HTML
-      const menusHtml = generateMenusHtml(place);
+      // Render loading spinner HTML
+      const spinnerHtml = `
+        <div class="flex flex-col items-center justify-center py-xl space-y-sm text-center">
+          <svg class="animate-spin h-8 w-8 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span class="text-xs text-outline animate-pulse font-medium">카카오맵에서 실시간 메뉴판을 분석 중입니다...</span>
+        </div>
+      `;
 
-      // Display Sidebar detailed info card (for desktop) or slide up the bottom drawer (for mobile)
-      
-      // Desktop Sidebar injection:
-      // If we are on desktop, we show details inside the listContainer or in a floating card. Let's make it look beautiful:
-      // Since screen size is handled, we will fill the mobile drawer and show it.
-      
-      // 1. Mobile Drawer Populate & Slide-up
+      // 1. Mobile Drawer Populate & Slide-up (with spinner)
       document.getElementById('drawer-title').innerText = place.name;
       document.getElementById('drawer-category').innerText = `${place.category} (거리: ${place.distance}m)`;
-      document.getElementById('drawer-menu-content').innerHTML = menusHtml;
+      document.getElementById('drawer-menu-content').innerHTML = spinnerHtml;
       
       const drawer = document.getElementById('mobile-detail-drawer');
       drawer.classList.remove('translate-y-full');
@@ -895,11 +906,7 @@
         listDrawer.classList.add('translate-y-full');
       }
 
-      // 2. Desktop sidebar detail option
-      // Let's also display the detailed menus overlay in the sidebar for desktop users.
-      // We can insert a toggleable menu list details modal, or inject it right under the list card.
-      // Let's create an elegant desktop detail overlay on the right-bottom side of the screen.
-      // Actually, we can add a persistent floating desktop details panel in map-container for desktop.
+      // 2. Desktop sidebar detail card (with spinner)
       let desktopCard = document.getElementById('desktop-detail-card');
       if (!desktopCard) {
         desktopCard = document.createElement('div');
@@ -919,13 +926,77 @@
           </button>
         </div>
         <div class="flex-1 overflow-y-auto space-y-md py-sm">
-          ${menusHtml}
+          ${spinnerHtml}
         </div>
       `;
       desktopCard.classList.remove('hidden');
 
       document.getElementById('close-desktop-card').addEventListener('click', () => {
         desktopCard.classList.add('hidden');
+      });
+
+      // 3. Asynchronously fetch the actual menus from the backend
+      const token = localStorage.getItem('token');
+      fetch(`${API_URL}/restaurants/${place.id}/menu`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(res => res.json())
+      .then(menuData => {
+        // Only render if the selected restaurant hasn't changed during request
+        if (selectedPlaceId !== place.id) return;
+
+        const updatedPlace = {
+          ...place,
+          hasMenuData: menuData.hasMenuData,
+          safeMenus: menuData.safeMenus,
+          unsafeMenus: menuData.unsafeMenus,
+          message: menuData.message || place.message,
+          safety: (menuData.safety && menuData.safety !== 'unknown') ? menuData.safety : place.safety
+        };
+        const finalHtml = generateMenusHtml(updatedPlace);
+        
+        // Update Mobile Drawer
+        const drawerContent = document.getElementById('drawer-menu-content');
+        if (drawerContent) {
+          drawerContent.innerHTML = finalHtml;
+        }
+        
+        // Update Desktop Card
+        const desktopCardBody = document.querySelector('#desktop-detail-card .flex-1');
+        if (desktopCardBody) {
+          desktopCardBody.innerHTML = finalHtml;
+        }
+
+        // Bind image popups on hover
+        bindMenuPillHovers();
+
+        // Also update local list safety status dynamically if it is safer/different
+        if (menuData.safety && menuData.safety !== 'unknown' && menuData.safety !== place.safety) {
+          const matchIndex = currentPlaces.findIndex(p => p.id === place.id);
+          if (matchIndex !== -1) {
+            currentPlaces[matchIndex].safety = menuData.safety;
+            currentPlaces[matchIndex].message = menuData.message;
+            // Rerender lists to show updated safety color pins/badges
+            renderPlacesOnMapAndList();
+          }
+        }
+      })
+      .catch(err => {
+        console.error('Failed to load menu details:', err);
+        // Fallback to original category-based safety assessment HTML
+        if (selectedPlaceId !== place.id) return;
+        
+        const fallbackHtml = generateMenusHtml(place);
+        const drawerContent = document.getElementById('drawer-menu-content');
+        if (drawerContent) drawerContent.innerHTML = fallbackHtml;
+        
+        const desktopCardBody = document.querySelector('#desktop-detail-card .flex-1');
+        if (desktopCardBody) desktopCardBody.innerHTML = fallbackHtml;
+
+        // Bind image popups on hover
+        bindMenuPillHovers();
       });
     }
 
@@ -972,7 +1043,14 @@
               안전한 추천 메뉴 (${place.safeMenus.length}개)
             </h5>
             <div class="flex flex-wrap gap-xs">
-              ${place.safeMenus.map(m => `<span class="bg-[#f1faf5] border border-[#d3eedf] px-md py-1 rounded-full text-xs font-semibold text-[#0f683d] flex items-center gap-1">${m}</span>`).join('')}
+              ${place.safeMenus.map(m => {
+                const name = typeof m === 'string' ? m : m.name;
+                const price = (m && typeof m === 'object') ? m.price : '';
+                const image = (m && typeof m === 'object') ? m.image : '';
+                const fallbackImg = `https://loremflickr.com/320/240/food,${encodeURIComponent(name)}`;
+                const finalImg = image || fallbackImg;
+                return `<span class="menu-pill bg-[#f1faf5] border border-[#d3eedf] px-md py-1 rounded-full text-xs font-semibold text-[#0f683d] flex items-center gap-1 cursor-pointer transition-transform hover:scale-105 active:scale-95" data-name="${name}" data-price="${price}" data-image="${finalImg}">${name}</span>`;
+              }).join('')}
             </div>
           </div>
         `;
@@ -987,7 +1065,14 @@
               위험 경고 메뉴 (${place.unsafeMenus.length}개)
             </h5>
             <div class="flex flex-wrap gap-xs">
-              ${place.unsafeMenus.map(m => `<span class="bg-[#ffebee] border border-[#ffcdd2] px-md py-1 rounded-full text-xs font-semibold text-[#c62828] flex items-center gap-1">${m}</span>`).join('')}
+              ${place.unsafeMenus.map(m => {
+                const name = typeof m === 'string' ? m : m.name;
+                const price = (m && typeof m === 'object') ? m.price : '';
+                const image = (m && typeof m === 'object') ? m.image : '';
+                const fallbackImg = `https://loremflickr.com/320/240/food,${encodeURIComponent(name)}`;
+                const finalImg = image || fallbackImg;
+                return `<span class="menu-pill bg-[#ffebee] border border-[#ffcdd2] px-md py-1 rounded-full text-xs font-semibold text-[#c62828] flex items-center gap-1 cursor-pointer transition-transform hover:scale-105 active:scale-95" data-name="${name}" data-price="${price}" data-image="${finalImg}">${name}</span>`;
+              }).join('')}
             </div>
             <p class="text-[10px] text-outline-variant font-medium leading-relaxed italic">
               * 위 메뉴들에는 현재 회원님의 알레르기 설정성분(${userAllergiesList.join(', ')})이 들어있을 가능성이 높습니다.
@@ -1005,6 +1090,67 @@
           </div>
         </div>
       `;
+    }
+
+    /**
+     * Bind hover listeners to newly generated menu pills for dynamic tooltips
+     */
+    function bindMenuPillHovers() {
+      const pills = document.querySelectorAll('.menu-pill');
+      const tooltip = document.getElementById('menu-image-tooltip');
+      const tooltipImg = document.getElementById('tooltip-img');
+      const tooltipName = document.getElementById('tooltip-name');
+      const tooltipPrice = document.getElementById('tooltip-price');
+
+      if (!tooltip || !tooltipImg) return;
+
+      let hideTimeout = null;
+
+      pills.forEach(pill => {
+        pill.addEventListener('mouseenter', (e) => {
+          if (hideTimeout) {
+            clearTimeout(hideTimeout);
+            hideTimeout = null;
+          }
+
+          const name = pill.getAttribute('data-name') || '';
+          const price = pill.getAttribute('data-price') || '';
+          const imgUrl = pill.getAttribute('data-image') || '';
+
+          tooltipImg.src = imgUrl;
+          if (tooltipName) tooltipName.innerText = name;
+          if (tooltipPrice) tooltipPrice.innerText = price ? `${price}` : '';
+
+          // Position the tooltip initially
+          tooltip.style.left = `${e.clientX}px`;
+          tooltip.style.top = `${e.clientY}px`;
+
+          // Show tooltip
+          tooltip.classList.remove('hidden');
+          // Force a reflow to make the transition work
+          tooltip.offsetHeight; 
+          tooltip.classList.remove('opacity-0');
+          tooltip.classList.add('opacity-100');
+        });
+
+        pill.addEventListener('mousemove', (e) => {
+          // Dynamic positioning matching client viewport coordinates
+          tooltip.style.left = `${e.clientX}px`;
+          tooltip.style.top = `${e.clientY}px`;
+        });
+
+        pill.addEventListener('mouseleave', () => {
+          tooltip.classList.remove('opacity-100');
+          tooltip.classList.add('opacity-0');
+
+          if (hideTimeout) clearTimeout(hideTimeout);
+          hideTimeout = setTimeout(() => {
+            if (tooltip.classList.contains('opacity-0')) {
+              tooltip.classList.add('hidden');
+            }
+          }, 200); // Wait for transition opacity duration (200ms)
+        });
+      });
     }
   </script>
 </body>

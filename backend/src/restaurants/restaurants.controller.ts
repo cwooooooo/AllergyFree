@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, Get, Param } from '@nestjs/common';
 import { RestaurantsService } from './restaurants.service';
 import { AuthGuard } from '../auth/auth.guard';
 
@@ -28,4 +28,15 @@ export class RestaurantsController {
     }
     return this.restaurantsService.analyzeNearbyRestaurants(userId, places);
   }
+
+  @UseGuards(AuthGuard)
+  @Get(':id/menu')
+  async getRestaurantMenu(
+    @Request() req: any,
+    @Param('id') placeId: string
+  ) {
+    const userId = req.user.sub;
+    return this.restaurantsService.getRestaurantMenu(placeId, userId);
+  }
 }
+

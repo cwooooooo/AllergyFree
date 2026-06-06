@@ -28,6 +28,10 @@ let RestaurantsController = class RestaurantsController {
         }
         return this.restaurantsService.analyzeNearbyRestaurants(userId, places);
     }
+    async getRestaurantMenu(req, placeId) {
+        const userId = req.user.sub;
+        return this.restaurantsService.getRestaurantMenu(placeId, userId);
+    }
 };
 exports.RestaurantsController = RestaurantsController;
 __decorate([
@@ -39,6 +43,15 @@ __decorate([
     __metadata("design:paramtypes", [Object, Array]),
     __metadata("design:returntype", Promise)
 ], RestaurantsController.prototype, "analyzeSafeRestaurants", null);
+__decorate([
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.Get)(':id/menu'),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "getRestaurantMenu", null);
 exports.RestaurantsController = RestaurantsController = __decorate([
     (0, common_1.Controller)('restaurants'),
     __metadata("design:paramtypes", [restaurants_service_1.RestaurantsService])

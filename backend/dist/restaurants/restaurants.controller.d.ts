@@ -13,8 +13,8 @@ export declare class RestaurantsController {
     constructor(restaurantsService: RestaurantsService);
     analyzeSafeRestaurants(req: any, places: PlaceInfo[]): Promise<{
         safety: string;
-        safeMenus: string[];
-        unsafeMenus: string[];
+        safeMenus: never[];
+        unsafeMenus: never[];
         hasMenuData: boolean;
         message: string;
         id: string;
@@ -25,5 +25,13 @@ export declare class RestaurantsController {
         address_name: string;
         place_url: string;
     }[]>;
+    getRestaurantMenu(req: any, placeId: string): Promise<{
+        id: string;
+        safety: string;
+        safeMenus: any[];
+        unsafeMenus: any[];
+        hasMenuData: boolean;
+        message: string;
+    }>;
 }
 export {};
