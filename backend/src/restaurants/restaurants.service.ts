@@ -299,13 +299,14 @@ export class RestaurantsService {
   /**
    * Scrape and analyze a specific restaurant's menu list on-demand using headless Chrome.
    */
-  async getRestaurantMenu(placeId: string, userId: number) {
+  async getRestaurantMenu(placeId: string, userId: number, category?: string) {
     const userKeywords = await this.getUserAllergyKeywords(userId);
     const CHROME_PATH = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
     const PORT = 9222;
 
     const spawn = require('child_process').spawn;
     const http = require('http');
+    const fs = require('fs');
 
     const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -325,68 +326,94 @@ export class RestaurantsService {
       });
     };
 
-    this.logger.log(`Launching headless Chrome to fetch menu for place ID: ${placeId}...`);
-    
-    // Spawn headless Chrome
-    const chrome = spawn(CHROME_PATH, [
-      '--headless',
-      '--disable-gpu',
-      `--remote-debugging-port=${PORT}`,
-      '--no-first-run',
-      '--no-default-browser-check'
-    ]);
-
-    // Wait for Chrome to boot
-    await sleep(1500);
-
     let menus: { name: string; price: string }[] = [];
     let hasMenuData = false;
+    let chrome: any = null;
 
-    try {
-      // Connect to debug port to get WebSocket URL
-      const targets = await fetchJson(`http://127.0.0.1:${PORT}/json/list`);
-      const mainTarget = targets.find((t: any) => t.type === 'page');
-      if (!mainTarget) {
-        throw new Error('No page target found in Chrome DevTools.');
-      }
+    const hasChrome = fs.existsSync(CHROME_PATH);
 
-      const wsUrl = mainTarget.webSocketDebuggerUrl;
-      const ws = new (globalThis as any).WebSocket(wsUrl);
+    if (hasChrome) {
+      this.logger.log(`Launching headless Chrome to fetch menu for place ID: ${placeId}...`);
+      try {
+        // Spawn headless Chrome
+        chrome = spawn(CHROME_PATH, [
+          '--headless',
+          '--disable-gpu',
+          `--remote-debugging-port=${PORT}`,
+          '--no-first-run',
+          '--no-default-browser-check'
+        ]);
 
-      let msgId = 1;
-      const send = (method: string, params: any = {}) => {
-        return new Promise<any>((resolve) => {
-          const currentId = msgId++;
-          const onMessage = (event: any) => {
-            const res = JSON.parse(event.data);
-            if (res.id === currentId) {
-              ws.removeEventListener('message', onMessage);
-              resolve(res.result);
-            }
-          };
-          ws.addEventListener('message', onMessage);
-          ws.send(JSON.stringify({ id: currentId, method, params }));
-        });
-      };
+        // Wait for Chrome to boot
+        await sleep(1500);
 
-      await new Promise<void>((resolve) => ws.onopen = () => resolve());
+        // Connect to debug port to get WebSocket URL
+        const targets = await fetchJson(`http://127.0.0.1:${PORT}/json/list`);
+        const mainTarget = targets.find((t: any) => t.type === 'page');
+        if (!mainTarget) {
+          throw new Error('No page target found in Chrome DevTools.');
+        }
 
-      // Navigate to Place page
-      await send('Page.navigate', { url: `https://place.map.kakao.com/${placeId}#menuInfo` });
+        const wsUrl = mainTarget.webSocketDebuggerUrl;
+        const ws = new (globalThis as any).WebSocket(wsUrl);
 
-      // Wait for page rendering
-      await sleep(3500);
+        let msgId = 1;
+        const send = (method: string, params: any = {}) => {
+          return new Promise<any>((resolve) => {
+            const currentId = msgId++;
+            const onMessage = (event: any) => {
+              const res = JSON.parse(event.data);
+              if (res.id === currentId) {
+                ws.removeEventListener('message', onMessage);
+                resolve(res.result);
+              }
+            };
+            ws.addEventListener('message', onMessage);
+            ws.send(JSON.stringify({ id: currentId, method, params }));
+          });
+        };
 
-      // Evaluate menu extraction JS (supports both .list_goods and fallback to old .list_menu)
-      const evalResult = await send('Runtime.evaluate', {
-        expression: `
-          (() => {
-            // First check list_goods (detailed text list of menu items)
-            const goodsItems = document.querySelectorAll('.list_goods li');
-            if (goodsItems && goodsItems.length > 0) {
-              return Array.from(goodsItems).map(el => {
-                const nameEl = el.querySelector('.tit_item');
-                const priceEl = el.querySelector('.desc_item');
+        await new Promise<void>((resolve) => ws.onopen = () => resolve());
+
+        // Navigate to Place page
+        await send('Page.navigate', { url: `https://place.map.kakao.com/${placeId}#menuInfo` });
+
+        // Wait for page rendering
+        await sleep(3500);
+
+        // Evaluate menu extraction JS (supports both .list_goods and fallback to old .list_menu)
+        const evalResult = await send('Runtime.evaluate', {
+          expression: `
+            (() => {
+              // First check list_goods (detailed text list of menu items)
+              const goodsItems = document.querySelectorAll('.list_goods li');
+              if (goodsItems && goodsItems.length > 0) {
+                return Array.from(goodsItems).map(el => {
+                  const nameEl = el.querySelector('.tit_item');
+                  const priceEl = el.querySelector('.desc_item');
+                  const imgEl = el.querySelector('img');
+                  let imgUrl = imgEl ? imgEl.src : '';
+                  if (!imgUrl) {
+                    const thumbDiv = el.querySelector('[style*="background-image"]');
+                    if (thumbDiv) {
+                      const bg = thumbDiv.style.backgroundImage;
+                      const match = bg.match(/url\\(['"]?(.*?)['"]?\\)/);
+                      if (match) imgUrl = match[1];
+                    }
+                  }
+                  return {
+                    name: nameEl ? nameEl.textContent.trim() : '',
+                    price: priceEl ? priceEl.textContent.trim() : '',
+                    image: imgUrl
+                  };
+                }).filter(item => item.name);
+              }
+
+              // Fallback to list_menu (printed picture menu info)
+              const menuItems = document.querySelectorAll('.list_menu li, .menuonly_type, .link_menu');
+              return Array.from(menuItems).map(el => {
+                const nameEl = el.querySelector('.loss_word, .txt_menu');
+                const priceEl = el.querySelector('.price_menu');
                 const imgEl = el.querySelector('img');
                 let imgUrl = imgEl ? imgEl.src : '';
                 if (!imgUrl) {
@@ -398,51 +425,33 @@ export class RestaurantsService {
                   }
                 }
                 return {
-                  name: nameEl ? nameEl.textContent.trim() : '',
-                  price: priceEl ? priceEl.textContent.trim() : '',
+                  name: nameEl ? nameEl.textContent.trim() : el.innerText.split('\\n')[0],
+                  price: priceEl ? priceEl.textContent.trim() : (el.innerText.split('\\n')[1] || ''),
                   image: imgUrl
                 };
               }).filter(item => item.name);
-            }
+            })()
+          `,
+          returnByValue: true
+        });
 
-            // Fallback to list_menu (printed picture menu info)
-            const menuItems = document.querySelectorAll('.list_menu li, .menuonly_type, .link_menu');
-            return Array.from(menuItems).map(el => {
-              const nameEl = el.querySelector('.loss_word, .txt_menu');
-              const priceEl = el.querySelector('.price_menu');
-              const imgEl = el.querySelector('img');
-              let imgUrl = imgEl ? imgEl.src : '';
-              if (!imgUrl) {
-                const thumbDiv = el.querySelector('[style*="background-image"]');
-                if (thumbDiv) {
-                  const bg = thumbDiv.style.backgroundImage;
-                  const match = bg.match(/url\\(['"]?(.*?)['"]?\\)/);
-                  if (match) imgUrl = match[1];
-                }
-              }
-              return {
-                name: nameEl ? nameEl.textContent.trim() : el.innerText.split('\\n')[0],
-                price: priceEl ? priceEl.textContent.trim() : (el.innerText.split('\\n')[1] || ''),
-                image: imgUrl
-              };
-            }).filter(item => item.name);
-          })()
-        `,
-        returnByValue: true
-      });
+        const extracted = evalResult?.result?.value;
+        if (Array.isArray(extracted) && extracted.length > 0) {
+          menus = extracted;
+          hasMenuData = true;
+        }
 
-      const extracted = evalResult?.result?.value;
-      if (Array.isArray(extracted) && extracted.length > 0) {
-        menus = extracted;
-        hasMenuData = true;
+        ws.close();
+      } catch (err) {
+        this.logger.error(`CDP crawling failed for place ID ${placeId}: ${(err as Error).message}`);
+      } finally {
+        if (chrome) {
+          // Clean up Chrome
+          chrome.kill();
+        }
       }
-
-      ws.close();
-    } catch (err) {
-      this.logger.error(`CDP crawling failed for place ID ${placeId}: ${(err as Error).message}`);
-    } finally {
-      // Clean up Chrome
-      chrome.kill();
+    } else {
+      this.logger.log(`Headless Chrome not found at ${CHROME_PATH}. Skipping crawling, falling back.`);
     }
 
     if (hasMenuData && menus.length > 0) {
@@ -512,6 +521,18 @@ export class RestaurantsService {
         message
       };
     } else {
+      if (category) {
+        const fallback = this.analyzeByFallback(category, userKeywords);
+        return {
+          id: placeId,
+          safety: fallback.safety,
+          safeMenus: [],
+          unsafeMenus: [],
+          hasMenuData: false,
+          message: fallback.message
+        };
+      }
+
       return {
         id: placeId,
         safety: 'unknown',

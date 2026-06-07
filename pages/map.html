@@ -937,7 +937,8 @@
 
       // 3. Asynchronously fetch the actual menus from the backend
       const token = localStorage.getItem('token');
-      fetch(`${API_URL}/restaurants/${place.id}/menu`, {
+      const categoryParam = encodeURIComponent(place.category || '');
+      fetch(`${API_URL}/restaurants/${place.id}/menu?category=${categoryParam}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
